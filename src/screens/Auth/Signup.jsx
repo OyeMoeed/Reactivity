@@ -4,8 +4,9 @@ import Container from '../../container/Container';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
 import SocialButtons from '../../components/SocialButtons';
+import Login from './Login';
 
-const Signup = () => {
+const Signup = ({navigation}) => {
   const [email, setEmail] = useState('');
   return (
     <Container>
@@ -20,11 +21,11 @@ const Signup = () => {
           label="Continue With Facebook"
           backgroundColor="#898F9C"
         />
-        <SocialButtons label="Continue With Google" />
+        <SocialButtons label="Continue With Google" backgroundColor="#4285F4" />
       </View>
       <View style={style.text}>
         <Text>Already Have an Account?</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate(Login)}>
           <Text> Sign In</Text>
         </TouchableOpacity>
       </View>
