@@ -11,8 +11,9 @@ import Container from '../../container/Container';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
 import SocialButtons from '../../components/SocialButtons';
+import Signup from './Signup';
 
-const Login = () => {
+const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   return (
     <Container>
@@ -34,7 +35,7 @@ const Login = () => {
       </View>
       <View style={style.text}>
         <Text>Need An Account?</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate(Signup)}>
           <Text> Sign Up</Text>
         </TouchableOpacity>
       </View>
