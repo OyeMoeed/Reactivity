@@ -18,6 +18,7 @@ const style = StyleSheet.create({
     width: '50%',
     borderRadius: 10,
     padding: 10,
+    paddingHorizontal: 30,
     marginVertical: 10,
     alignSelf: 'center',
     backgroundColor: '#4285F4',
