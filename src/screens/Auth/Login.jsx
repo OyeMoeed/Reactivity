@@ -12,17 +12,19 @@ import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
 import SocialButtons from '../../components/SocialButtons';
 import Signup from './Signup';
+import ResetPassword from './ResetPassword';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   return (
     <Container>
       <View style={{height: '20%'}} />
-      <InputField placeholder="Enter Your Email" label="Email" value={email} />
-      <InputField placeholder="********" label="Password" />
+      <InputField placeholder="Enter Your Email" label="Email" value={email} onChange={(useremail)=> setEmail(useremail)} />
+      <InputField placeholder="********" label="Password" value={password} onChange={(userpassword) => setPassword(userpassword)} secureTextEntry={true}/>
       <StyledButton label="Sign In" onPress={() => Alert.alert('lalala')} />
       <View style={style.text}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate(ResetPassword)}>
           <Text>Forgot Password?</Text>
         </TouchableOpacity>
       </View>

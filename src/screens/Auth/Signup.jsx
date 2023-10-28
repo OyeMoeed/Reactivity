@@ -4,31 +4,28 @@ import Container from '../../container/Container';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
 import SocialButtons from '../../components/SocialButtons';
-import Login from './Login';
 
 const Signup = ({navigation}) => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   return (
     <Container>
-      <InputField placeholder="Enter Your Email" label="Email" value={email} />
-      <InputField placeholder="Enter Your Email" label="Email" value={email} />
-      <InputField placeholder="********" label="Password" />
-      <InputField placeholder="********" label="Password" />
+      <InputField placeholder="Enter Your Name" label="Name" value={name} onChange={(username)=>setName(username)} />
+      <InputField placeholder="Enter Your Email" label="Email" value={email} onChange={(useremail)=> setEmail(useremail)} />
+      <InputField placeholder="********" label="Password" value={password} onChange={(userpassword) => setPassword(userpassword)}  secureTextEntry={true}/>
+      <InputField placeholder="********" label="Confirm Password" value={confirmPassword} onChange={(confirmusrpassword) => setConfirmPassword(confirmusrpassword)} secureTextEntry={true} />
       <StyledButton label="Create Acoount" />
-
-      <View style={style.socialView}>
+<Text>OR</Text>
+      <View>
         <SocialButtons
           label="Continue With Facebook"
           backgroundColor="#898F9C"
         />
         <SocialButtons label="Continue With Google" backgroundColor="#4285F4" />
       </View>
-      <View style={style.text}>
-        <Text>Already Have an Account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate(Login)}>
-          <Text> Sign In</Text>
-        </TouchableOpacity>
-      </View>
+      
     </Container>
   );
 };
@@ -39,8 +36,5 @@ const style = StyleSheet.create({
   text: {
     flexDirection: 'row',
     justifyContent: 'center',
-  },
-  socialView: {
-    marginVertical: 30,
   },
 });
