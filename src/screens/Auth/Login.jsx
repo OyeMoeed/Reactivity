@@ -19,10 +19,20 @@ const Login = ({navigation}) => {
   const [password, setPassword] = useState('');
   return (
     <Container>
-      <View style={{height: '20%'}} />
-      <InputField placeholder="Enter Your Email" label="Email" value={email} onChange={(useremail)=> setEmail(useremail)} />
-      <InputField placeholder="********" label="Password" value={password} onChange={(userpassword) => setPassword(userpassword)} secureTextEntry={true}/>
-      <StyledButton label="Sign In" onPress={() => Alert.alert('lalala')} />
+      <InputField
+        placeholder="Enter Your Email"
+        label="Email"
+        value={email}
+        onChange={useremail => setEmail(useremail)}
+      />
+      <InputField
+        placeholder="********"
+        label="Password"
+        value={password}
+        onChange={userpassword => setPassword(userpassword)}
+        secureTextEntry={true}
+      />
+      <StyledButton label="Sign In" onPress={() => alert('SUCCESS')} />
       <View style={style.text}>
         <TouchableOpacity onPress={() => navigation.navigate(ResetPassword)}>
           <Text>Forgot Password?</Text>

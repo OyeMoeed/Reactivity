@@ -12,12 +12,34 @@ const Signup = ({navigation}) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   return (
     <Container>
-      <InputField placeholder="Enter Your Name" label="Name" value={name} onChange={(username)=>setName(username)} />
-      <InputField placeholder="Enter Your Email" label="Email" value={email} onChange={(useremail)=> setEmail(useremail)} />
-      <InputField placeholder="********" label="Password" value={password} onChange={(userpassword) => setPassword(userpassword)}  secureTextEntry={true}/>
-      <InputField placeholder="********" label="Confirm Password" value={confirmPassword} onChange={(confirmusrpassword) => setConfirmPassword(confirmusrpassword)} secureTextEntry={true} />
+      <InputField
+        placeholder="Enter Your Name"
+        label="Name"
+        value={name}
+        onChange={username => setName(username)}
+      />
+      <InputField
+        placeholder="Enter Your Email"
+        label="Email"
+        value={email}
+        onChange={useremail => setEmail(useremail)}
+      />
+      <InputField
+        placeholder="********"
+        label="Password"
+        value={password}
+        onChange={userpassword => setPassword(userpassword)}
+        secureTextEntry={true}
+      />
+      <InputField
+        placeholder="********"
+        label="Confirm Password"
+        value={confirmPassword}
+        onChange={confirmusrpassword => setConfirmPassword(confirmusrpassword)}
+        secureTextEntry={true}
+      />
       <StyledButton label="Create Acoount" />
-<Text>OR</Text>
+      <Text>OR</Text>
       <View>
         <SocialButtons
           label="Continue With Facebook"
@@ -25,7 +47,6 @@ const Signup = ({navigation}) => {
         />
         <SocialButtons label="Continue With Google" backgroundColor="#4285F4" />
       </View>
-      
     </Container>
   );
 };

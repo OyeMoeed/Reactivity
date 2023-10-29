@@ -16,10 +16,23 @@ const ResetPassword = () => {
   const [password, setPassword] = useState('');
   return (
     <Container>
-      <InputField placeholder="Enter Your New Password" label="New Password" value={email} onChange={(useremail)=> setEmail(useremail)} />
-      <InputField placeholder="********" label="Confirm Your Password" value={password} onChange={(userpassword) => setPassword(userpassword)} secureTextEntry={true}/>
-      <StyledButton label="Update Password" onPress={() => alert('Password Updated')} />
-
+      <InputField
+        placeholder="Enter Your New Password"
+        label="New Password"
+        value={email}
+        onChange={useremail => setEmail(useremail)}
+      />
+      <InputField
+        placeholder="********"
+        label="Confirm Your Password"
+        value={password}
+        onChange={userpassword => setPassword(userpassword)}
+        secureTextEntry={true}
+      />
+      <StyledButton
+        label="Update Password"
+        onPress={() => alert('Password Updated')}
+      />
     </Container>
   );
 };
