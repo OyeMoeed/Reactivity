@@ -1,22 +1,17 @@
-import {
-  View,
-  Text,
-  Button,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-} from 'react-native';
-import React, {useState} from 'react';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import React, {createContext, useContext, useState} from 'react';
 import Container from '../../container/Container';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
 import SocialButtons from '../../components/SocialButtons';
 import Signup from './Signup';
 import ResetPassword from './ResetPassword';
+import {AuthContext} from '../../firebase/AuthProvider';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const {login} = createContext(AuthContext);
   return (
     <Container>
       <InputField
@@ -24,6 +19,7 @@ const Login = ({navigation}) => {
         label="Email"
         value={email}
         onChange={useremail => setEmail(useremail)}
+        autoCapitalize={false}
       />
       <InputField
         placeholder="********"
@@ -31,8 +27,9 @@ const Login = ({navigation}) => {
         value={password}
         onChange={userpassword => setPassword(userpassword)}
         secureTextEntry={true}
+        autoCapitalize={false}
       />
-      <StyledButton label="Sign In" onPress={() => alert('SUCCESS')} />
+      <StyledButton label="Sign In" onPress={() => login(email, password)} />
       <View style={style.text}>
         <TouchableOpacity onPress={() => navigation.navigate(ResetPassword)}>
           <Text>Forgot Password?</Text>

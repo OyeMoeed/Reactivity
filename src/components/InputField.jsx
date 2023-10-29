@@ -5,7 +5,7 @@ const InputField = ({label, value, ...props}) => {
   return (
     <View>
       <Text>{label}</Text>
-      <TextInput {...props} style={style.inputs} />
+      <TextInput {...props} style={style.inputs}  />
     </View>
   );
 };

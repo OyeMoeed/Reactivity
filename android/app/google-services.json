@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "356905384961",
+    "project_id": "reactnativefirebase-a2025",
+    "storage_bucket": "reactnativefirebase-a2025.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:356905384961:android:73913cbe89ce6d124b9400",
+        "android_client_info": {
+          "package_name": "com.reactivity"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcj5F3CvWyZ7X-R1a01gKV7rEXP1P9Ev4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
