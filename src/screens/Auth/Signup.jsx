@@ -1,15 +1,18 @@
-import {View, Text, Button, TouchableOpacity, StyleSheet} from 'react-native';
-import React, {useState} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
+import React, {useContext, useState} from 'react';
 import Container from '../../container/Container';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
 import SocialButtons from '../../components/SocialButtons';
+import {AuthContext} from '../../firebase/AuthProvider';
 
 const Signup = ({navigation}) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const {register} = useContext(AuthContext);
+
   return (
     <Container>
       <InputField
@@ -23,6 +26,7 @@ const Signup = ({navigation}) => {
         label="Email"
         value={email}
         onChange={useremail => setEmail(useremail)}
+        autoCapitalize={false}
       />
       <InputField
         placeholder="********"
@@ -30,6 +34,7 @@ const Signup = ({navigation}) => {
         value={password}
         onChange={userpassword => setPassword(userpassword)}
         secureTextEntry={true}
+        autoCapitalize={false}
       />
       <InputField
         placeholder="********"
@@ -37,8 +42,12 @@ const Signup = ({navigation}) => {
         value={confirmPassword}
         onChange={confirmusrpassword => setConfirmPassword(confirmusrpassword)}
         secureTextEntry={true}
+        autoCapitalize={false}
       />
-      <StyledButton label="Create Acoount" />
+      <StyledButton
+        label="Create Acoount"
+        onPress={() => register(email, password)}
+      />
       <Text>OR</Text>
       <View>
         <SocialButtons
