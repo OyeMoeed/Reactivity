@@ -1,11 +1,15 @@
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 import React from 'react';
 
-const InputField = ({label, value, ...props}) => {
+const InputField = ({label, value, autoCapitalize, ...props}) => {
   return (
     <View>
       <Text>{label}</Text>
-      <TextInput {...props} style={style.inputs}  />
+      <TextInput
+        {...props}
+        style={style.inputs}
+        autoCapitalize={autoCapitalize}
+      />
     </View>
   );
 };
