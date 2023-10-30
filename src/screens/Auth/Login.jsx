@@ -9,27 +9,30 @@ import ResetPassword from './ResetPassword';
 import {AuthContext} from '../../firebase/AuthProvider';
 
 const Login = ({navigation}) => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
   const {login} = useContext(AuthContext);
   return (
     <Container>
       <InputField
         placeholder="Enter Your Email"
         label="Email"
-        value={email}
-        onChange={useremail => setEmail(useremail)}
-        autoCapitalize={false}
+        value={loginEmail}
+        onChangeText={loginMail => setLoginEmail(loginMail)}
+        autoCapitalize="none"
       />
       <InputField
         placeholder="********"
         label="Password"
-        value={password}
-        onChange={userpassword => setPassword(userpassword)}
+        value={loginPassword}
+        onChangeText={loginpass => setLoginPassword(loginpass)}
         secureTextEntry={true}
-        autoCapitalize={false}
+        autoCapitalize="none"
       />
-      <StyledButton label="Sign In" onPress={() => login(email, password)} />
+      <StyledButton
+        label="Sign In"
+        onPress={() => login(loginEmail, loginPassword)}
+      />
       <View style={style.text}>
         <TouchableOpacity onPress={() => navigation.navigate(ResetPassword)}>
           <Text>Forgot Password?</Text>

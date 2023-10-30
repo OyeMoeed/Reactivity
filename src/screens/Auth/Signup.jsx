@@ -7,11 +7,12 @@ import SocialButtons from '../../components/SocialButtons';
 import {AuthContext} from '../../firebase/AuthProvider';
 
 const Signup = ({navigation}) => {
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [confirmPassword, setConfirmPassword] = useState();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const {register} = useContext(AuthContext);
+
   return (
     <Container>
       <InputField
@@ -24,16 +25,15 @@ const Signup = ({navigation}) => {
         placeholder="Enter Your Email"
         label="Email"
         value={email}
-        onChange={useremail => setEmail(useremail)}
-        autoCapitalize={false}
+        onChangeText={useremail => setEmail(useremail)}
+        autoCapitalize="none"
       />
       <InputField
-        placeholder="********"
+        placeholder="* * * * * * *"
         label="Password"
         value={password}
-        onChange={userpassword => setPassword(userpassword)}
-        secureTextEntry={true}
-        autoCapitalize={false}
+        onChangeText={userpassword => setPassword(userpassword)}
+        autoCapitalize="none"
       />
       <InputField
         placeholder="********"
@@ -41,7 +41,7 @@ const Signup = ({navigation}) => {
         value={confirmPassword}
         onChange={confirmusrpassword => setConfirmPassword(confirmusrpassword)}
         secureTextEntry={true}
-        autoCapitalize={false}
+        autoCapitalize="none"
       />
       <StyledButton
         label="Create Acoount"
