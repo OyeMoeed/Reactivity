@@ -7,12 +7,11 @@ import SocialButtons from '../../components/SocialButtons';
 import {AuthContext} from '../../firebase/AuthProvider';
 
 const Signup = ({navigation}) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [confirmPassword, setConfirmPassword] = useState();
   const {register} = useContext(AuthContext);
-
   return (
     <Container>
       <InputField
@@ -61,10 +60,3 @@ const Signup = ({navigation}) => {
 };
 
 export default Signup;
-
-const style = StyleSheet.create({
-  text: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-});

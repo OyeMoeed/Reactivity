@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import React, {createContext, useContext, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import Container from '../../container/Container';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
@@ -9,9 +9,9 @@ import ResetPassword from './ResetPassword';
 import {AuthContext} from '../../firebase/AuthProvider';
 
 const Login = ({navigation}) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const {login} = createContext(AuthContext);
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const {login} = useContext(AuthContext);
   return (
     <Container>
       <InputField
