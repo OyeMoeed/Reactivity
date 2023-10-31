@@ -27,7 +27,6 @@ const Login = ({navigation}) => {
         value={loginPassword}
         onChangeText={loginpass => setLoginPassword(loginpass)}
         secureTextEntry={true}
-        autoCapitalize="none"
       />
       <StyledButton
         label="Sign In"
