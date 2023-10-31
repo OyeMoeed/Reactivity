@@ -26,6 +26,7 @@ const Signup = ({navigation}) => {
         label="Email"
         value={email}
         onChangeText={useremail => setEmail(useremail)}
+        keyboardType="email-address"
         autoCapitalize="none"
       />
       <InputField
@@ -41,7 +42,6 @@ const Signup = ({navigation}) => {
         value={confirmPassword}
         onChange={confirmusrpassword => setConfirmPassword(confirmusrpassword)}
         secureTextEntry={true}
-        autoCapitalize="none"
       />
       <StyledButton
         label="Create Acoount"
