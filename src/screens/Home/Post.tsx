@@ -1,6 +1,6 @@
-import {View, Text, TextInput, StyleSheet} from 'react-native';
+import {TextInput, StyleSheet} from 'react-native';
 import React from 'react';
-import Container from '../../container/Container';
+import Container from '../../container/AuthContainer';
 
 const Post = () => {
   return (

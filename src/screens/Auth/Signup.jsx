@@ -1,10 +1,11 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React, {useContext, useState} from 'react';
-import Container from '../../container/Container';
+import Container from '../../container/AuthContainer';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
 import SocialButtons from '../../components/SocialButtons';
 import {AuthContext} from '../../firebase/AuthProvider';
+import AuthContainer from '../../container/AuthContainer';
 
 const Signup = ({navigation}) => {
   const [name, setName] = useState('');
@@ -12,9 +13,19 @@ const Signup = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const {register} = useContext(AuthContext);
+  const handleSignUp = () => {
+    if (password !== confirmPassword) {
+      // Passwords do not match, display an error message or take appropriate action
+      alert('Passwords do not match. Please try again.');
+      return;
+    }
+
+    // Proceed with registration if passwords match
+    register(email, password);
+  };
 
   return (
-    <Container>
+    <AuthContainer>
       <InputField
         placeholder="Enter Your Name"
         label="Name"
@@ -37,16 +48,15 @@ const Signup = ({navigation}) => {
         autoCapitalize="none"
       />
       <InputField
-        placeholder="********"
-        label="Confirm Password"
+        placeholder="* * * * * * *"
+        label="Password"
         value={confirmPassword}
-        onChange={confirmusrpassword => setConfirmPassword(confirmusrpassword)}
-        secureTextEntry={true}
+        onChangeText={confirmusrpassword =>
+          setConfirmPassword(confirmusrpassword)
+        }
+        autoCapitalize="none"
       />
-      <StyledButton
-        label="Create Acoount"
-        onPress={() => register(email, password)}
-      />
+      <StyledButton label="Create Acoount" onPress={handleSignUp} />
       <Text>OR</Text>
       <View>
         <SocialButtons
@@ -55,7 +65,7 @@ const Signup = ({navigation}) => {
         />
         <SocialButtons label="Continue With Google" backgroundColor="#4285F4" />
       </View>
-    </Container>
+    </AuthContainer>
   );
 };
 
