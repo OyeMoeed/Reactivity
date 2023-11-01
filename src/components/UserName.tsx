@@ -1,11 +1,11 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
 
-const UserName = () => {
+const UserName = ({children, childrenTime}) => {
   return (
     <View style={style.userNametab}>
-      <Text>userName</Text>
-      <Text>Time</Text>
+      <Text>{children}</Text>
+      <Text>{childrenTime}</Text>
     </View>
   );
 };

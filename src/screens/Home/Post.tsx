@@ -5,7 +5,11 @@ import Container from '../../container/AuthContainer';
 const Post = () => {
   return (
     <Container>
-      <TextInput placeholder="What's On Your Mind? " style={styles.text} />
+      <TextInput
+        placeholder="What's On Your Mind? "
+        multiline
+        style={styles.text}
+      />
     </Container>
   );
 };
@@ -15,5 +19,6 @@ export default Post;
 const styles = StyleSheet.create({
   text: {
     fontSize: 32,
+    marginHorizontal: 25,
   },
 });
