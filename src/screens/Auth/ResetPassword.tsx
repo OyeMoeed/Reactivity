@@ -6,16 +6,16 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import React, {useContext, useState} from 'react';
-import Container from '../../container/Container';
+import React, {useState} from 'react';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
+import AuthContainer from '../../container/AuthContainer';
 
 const ResetPassword = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   return (
-    <Container>
+    <AuthContainer>
       <InputField
         placeholder="Enter Your New Password"
         label="New Password"
@@ -33,7 +33,7 @@ const ResetPassword = () => {
         label="Update Password"
         onPress={() => alert('Password Updated')}
       />
-    </Container>
+    </AuthContainer>
   );
 };
 

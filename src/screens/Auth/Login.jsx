@@ -1,19 +1,19 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React, {useContext, useState} from 'react';
-import Container from '../../container/Container';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
 import SocialButtons from '../../components/SocialButtons';
 import Signup from './Signup';
 import ResetPassword from './ResetPassword';
 import {AuthContext} from '../../firebase/AuthProvider';
+import AuthContainer from '../../container/AuthContainer';
 
 const Login = ({navigation}) => {
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const {login} = useContext(AuthContext);
   return (
-    <Container>
+    <AuthContainer>
       <InputField
         placeholder="Enter Your Email"
         label="Email"
@@ -50,7 +50,7 @@ const Login = ({navigation}) => {
           <Text> Sign Up</Text>
         </TouchableOpacity>
       </View>
-    </Container>
+    </AuthContainer>
   );
 };
 

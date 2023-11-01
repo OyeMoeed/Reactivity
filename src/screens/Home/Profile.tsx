@@ -1,8 +1,8 @@
-import {View, Text} from 'react-native';
+import {Text} from 'react-native';
 import React, {useContext} from 'react';
 import StyledButton from '../../components/StyledButton';
 import {AuthContext} from '../../firebase/AuthProvider';
-import Container from '../../container/Container';
+import Container from '../../container/AuthContainer';
 
 const Profile = () => {
   const {signout} = useContext(AuthContext);
