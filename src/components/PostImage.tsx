@@ -1,11 +1,16 @@
 import {View, Text, Image, StyleSheet} from 'react-native';
 import React from 'react';
+
 const PostImage = ({source, ...props}) => {
-  return (
-    <View>
-      <Image source={source} {...props} alt="/" style={style.postImageSize} />
-    </View>
-  );
+  if (source && source !== 'none') {
+    return (
+      <View>
+        <Image source={source} {...props} style={style.postImageSize} />
+      </View>
+    );
+  }
+
+  return null; // Return null if no image source is provided or if it's 'none'
 };
 
 export default PostImage;

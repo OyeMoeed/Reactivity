@@ -1,39 +1,75 @@
+import {View, Text, FlatList} from 'react-native';
 import React from 'react';
-import Container from '../../container/AuthContainer';
-import Card from '../../components/Card';
+import PostScreen from './PostScreen';
 import UserInfotab from '../../components/UserInfotab';
-import PostText from '../../components/PostText';
-import PostImage from '../../components/PostImage';
-import image from '../../assets/postImage.jpg';
-import avatar from '../../assets/avatar.png';
-import HomeContainer from '../../container/HomeContainer';
-import Interactions from '../../components/Interactions';
+import UserName from '../../components/UserName';
+const Posts = [
+  {
+    id: '1',
+    userName: 'Jenny Doe',
+    userImg: require('../../assets/avatar.png'),
+    postTime: '4 mins ago',
+    post: 'Hey there, this is my test for a post of my social app in React Native.',
+    postImg: require('../../assets/postImage.jpg'),
+    liked: true,
+    likes: '14',
+    comments: '5',
+  },
+  {
+    id: '2',
+    userName: 'John Doe',
+    userImg: require('../../assets/avatar.png'),
+    postTime: '2 hours ago',
+    post: 'Hey there, this is my test for a post of my social app in React Native.',
+    postImg: 'none',
+    liked: false,
+    likes: '8',
+    comments: '0',
+  },
+  {
+    id: '3',
+    userName: 'Ken William',
+    userImg: require('../../assets/avatar.png'),
+    postTime: '1 hours ago',
+    post: 'Hey there, this is my test for a post of my social app in React Native.',
+    postImg: require('../../assets/postImage.jpg'),
+    liked: true,
+    likes: '1',
+    comments: '0',
+  },
+  {
+    id: '4',
+    userName: 'Selina Paul',
+    userImg: require('../../assets/avatar.png'),
+    postTime: '1 day ago',
+    post: 'Hey there, this is my test for a post of my social app in React Native.',
+    // postImg: require('../assets/posts/post-img-4.jpg'),
+    liked: true,
+    likes: '22',
+    comments: '4',
+  },
+  {
+    id: '5',
+    userName: 'Christy Alex',
+    userImg: require('../../assets/avatar.png'),
+    postTime: '2 days ago',
+    post: 'Hey there, this is my test for a post of my social app in React Native.',
+    //postImg: 'none',
+    liked: false,
+    likes: '0',
+    comments: '0',
+  },
+];
 
 const Home = () => {
   return (
-    <HomeContainer>
-      <Card>
-        <UserInfotab source={avatar} />
-        <PostText>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu
-          accumsan nisl, vitae vehicula tellus. Sed pharetra ligula vel sem
-          congue, vitae mattis tortor tristique. Maecenas semper ut nisl eget
-          posuere.
-        </PostText>
-        <PostImage source={image} />
-        <Interactions />
-      </Card>
-      <Card>
-        <UserInfotab source={avatar} />
-        <PostText>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eu
-          accumsan nisl, vitae vehicula tellus. Sed pharetra ligula vel sem
-          congue, vitae mattis tortor tristique. Maecenas semper ut nisl eget
-          posuere.
-        </PostText>
-        <Interactions />
-      </Card>
-    </HomeContainer>
+    <View>
+      <FlatList
+        data={Posts}
+        renderItem={({item}) => <PostScreen item={item} />}
+        keyExtractor={item => item.id}
+      />
+    </View>
   );
 };
 
