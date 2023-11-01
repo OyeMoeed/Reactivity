@@ -1,14 +1,18 @@
 import {View, Text} from 'react-native';
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
 import Home from '../screens/Home/Home';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Post from '../screens/Home/Post';
+import Profile from '../screens/Home/Profile';
 
-const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 const AppStack = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen component={Home} name="Home" options={{title: ''}} />
-    </Stack.Navigator>
+    <Tab.Navigator>
+      <Tab.Screen component={Home} name="HOME" />
+      <Tab.Screen component={Post} name="POST" />
+      <Tab.Screen component={Profile} name="PROFILE" />
+    </Tab.Navigator>
   );
 };
 
