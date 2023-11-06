@@ -31,7 +31,7 @@ const Posts = [
     userName: 'Ken William',
     userImg: require('../../assets/avatar.png'),
     postTime: '1 hours ago',
-    post: 'Hey there, this is my test for a post of my social app in React Native.',
+    post: 'lalalalalallala',
     postImg: require('../../assets/postImage.jpg'),
     liked: true,
     likes: '1',

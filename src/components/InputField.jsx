@@ -1,22 +1,29 @@
-import {View, Text, TextInput, StyleSheet} from 'react-native';
+// InputField.js
 import React from 'react';
+import {View, Text, TextInput, StyleSheet} from 'react-native';
+import {useForm, Controller} from 'react-hook-form';
 
-const InputField = ({label, value, autoCapitalize, onChangeText, ...props}) => {
+const InputField = ({label, name, control, rules, ...inputProps}) => {
   return (
     <View>
       <Text>{label}</Text>
-      <TextInput
-        {...props}
-        style={style.inputs}
-        autoCapitalize={autoCapitalize}
-        onChangeText={onChangeText}
-        value={value}
+      <Controller
+        control={control}
+        render={({field}) => (
+          <TextInput
+            style={style.inputs}
+            value={field.value}
+            onChangeText={field.onChange}
+            onBlur={field.onBlur}
+            {...inputProps} // Pass additional input props
+          />
+        )}
+        name={name}
+        rules={rules}
       />
     </View>
   );
 };
-
-export default InputField;
 
 const style = StyleSheet.create({
   inputs: {
@@ -27,3 +34,5 @@ const style = StyleSheet.create({
     marginVertical: 10,
   },
 });
+
+export default InputField;

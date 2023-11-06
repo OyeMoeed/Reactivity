@@ -19,6 +19,6 @@ const style = StyleSheet.create({
   postImageSize: {
     width: '100%',
     height: 250,
-    marginBottom: 10,
+    marginTop: 10,
   },
 });
