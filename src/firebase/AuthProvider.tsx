@@ -10,11 +10,11 @@ export const AuthProvider = ({children}) => {
     try {
       await auth().signInWithEmailAndPassword(email, password);
     } catch (e) {
-      alert('Sign In Unsuccessful: ' + e.message);
+      alert('Incorrect Email Id or Password');
     }
   };
 
-  const register = async (email, password) => {
+  const signup = async (email, password) => {
     try {
       await auth().createUserWithEmailAndPassword(email, password);
     } catch (e) {
@@ -38,7 +38,7 @@ export const AuthProvider = ({children}) => {
         user,
         setUser,
         login,
-        register,
+        signup,
         signout,
       }}>
       {children}

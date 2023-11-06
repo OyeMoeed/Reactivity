@@ -6,65 +6,61 @@ import StyledButton from '../../components/StyledButton';
 import SocialButtons from '../../components/SocialButtons';
 import {AuthContext} from '../../firebase/AuthProvider';
 import AuthContainer from '../../container/AuthContainer';
+import {useForm} from 'react-hook-form';
 
 const Signup = ({navigation}) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const {
+    control,
+    formState: {errors},
+    handleSubmit,
+  } = useForm();
   const {register} = useContext(AuthContext);
-  const handleSignUp = () => {
-    if (password !== confirmPassword) {
-      // Passwords do not match, display an error message or take appropriate action
+
+  const onSubmit = data => {
+    if (data.password !== data.confirmPassword) {
       alert('Passwords do not match. Please try again.');
       return;
     }
 
-    // Proceed with registration if passwords match
-    register(email, password);
+    register(data.email, data.password);
   };
 
   return (
     <AuthContainer>
       <InputField
-        placeholder="Enter Your Name"
         label="Name"
-        value={name}
-        onChange={username => setName(username)}
+        name="name"
+        control={control}
+        rules={{required: 'Name is required'}}
+        placeholder="Enter Your Name"
       />
       <InputField
-        placeholder="Enter Your Email"
         label="Email"
-        value={email}
-        onChangeText={useremail => setEmail(useremail)}
-        keyboardType="email-address"
+        name="email"
+        control={control}
+        rules={{required: 'Email is required'}}
+        placeholder="Enter Your Email"
         autoCapitalize="none"
       />
       <InputField
-        placeholder="* * * * * * *"
         label="Password"
-        value={password}
-        onChangeText={userpassword => setPassword(userpassword)}
-        autoCapitalize="none"
+        name="password"
+        control={control}
+        rules={{required: 'Password is required'}}
+        placeholder="* * * * * * *"
+        secureTextEntry={true}
       />
       <InputField
+        label="Confirm Password"
+        name="confirmPassword"
+        control={control}
+        rules={{required: 'Confirm Password is required'}}
         placeholder="* * * * * * *"
-        label="Password"
-        value={confirmPassword}
-        onChangeText={confirmusrpassword =>
-          setConfirmPassword(confirmusrpassword)
-        }
-        autoCapitalize="none"
+        secureTextEntry={true}
       />
-      <StyledButton label="Create Acoount" onPress={handleSignUp} />
+      <StyledButton label="Create Account" onPress={handleSubmit(onSubmit)} />
       <Text>OR</Text>
-      <View>
-        <SocialButtons
-          label="Continue With Facebook"
-          backgroundColor="#898F9C"
-        />
-        <SocialButtons label="Continue With Google" backgroundColor="#4285F4" />
-      </View>
+      <SocialButtons />
     </AuthContainer>
   );
 };
