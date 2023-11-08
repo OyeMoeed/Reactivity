@@ -1,6 +1,5 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React, {useContext, useState} from 'react';
-import Container from '../../container/AuthContainer';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
 import SocialButtons from '../../components/SocialButtons';

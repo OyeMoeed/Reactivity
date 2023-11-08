@@ -16,9 +16,9 @@ const style = StyleSheet.create({
     borderRadius: 15,
     padding: 10,
     paddingHorizontal: 20,
-    marginVertical: 10,
+    marginVertical: 5,
     backgroundColor: '#D3D3D37B',
-    width: '90%',
+    marginHorizontal: 8,
     alignContent: 'center',
   },
 });
