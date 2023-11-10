@@ -112,10 +112,7 @@ const AppStack = () => {
   };
 
   return (
-    <Tab.Navigator
-      tabBarOptions={{
-        activeTintColor: '#2e64e5',
-      }}>
+    <Tab.Navigator>
       <Tab.Screen
         name="h"
         component={FeedStack}
