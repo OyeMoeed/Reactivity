@@ -1,4 +1,4 @@
-import {Text} from 'react-native';
+import {StyleSheet, Text} from 'react-native';
 import React from 'react';
 import HomeContainer from '../../container/HomeContainer';
 import ActionButton from 'react-native-action-button';
@@ -10,7 +10,7 @@ const Messages = () => {
       <Text>Messages</Text>
       <ActionButton>
         <ActionButton.Item title="Start a new Chat" onPress={() => {}}>
-          <Icon name="camera" />
+          <Icon name="message" style={style.actionButtonIcon} />
         </ActionButton.Item>
       </ActionButton>
     </HomeContainer>
@@ -18,3 +18,11 @@ const Messages = () => {
 };
 
 export default Messages;
+
+const style = StyleSheet.create({
+  actionButtonIcon: {
+    fontSize: 20,
+    height: 22,
+    color: 'white',
+  },
+});

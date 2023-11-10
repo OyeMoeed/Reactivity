@@ -1,28 +1,24 @@
+import React, {useContext} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import React, {useContext, useState} from 'react';
-import Container from '../../container/AuthContainer';
+import {useForm} from 'react-hook-form';
+import AuthContainer from '../../container/AuthContainer';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
 import SocialButtons from '../../components/SocialButtons';
 import {AuthContext} from '../../firebase/AuthProvider';
-import AuthContainer from '../../container/AuthContainer';
-import {useForm} from 'react-hook-form';
 
 const Signup = ({navigation}) => {
   const {
     control,
-    formState: {errors},
     handleSubmit,
+    formState: {errors},
   } = useForm();
-  const {register} = useContext(AuthContext);
+
+  const {signup} = useContext(AuthContext);
 
   const onSubmit = data => {
-    if (data.password !== data.confirmPassword) {
-      alert('Passwords do not match. Please try again.');
-      return;
-    }
-
-    register(data.email, data.password);
+    const {email, password} = data;
+    signup(email, password);
   };
 
   return (
@@ -48,7 +44,7 @@ const Signup = ({navigation}) => {
         control={control}
         rules={{required: 'Password is required'}}
         placeholder="* * * * * * *"
-        secureTextEntry={true}
+        secureTextEntry
       />
       <InputField
         label="Confirm Password"
@@ -56,13 +52,25 @@ const Signup = ({navigation}) => {
         control={control}
         rules={{required: 'Confirm Password is required'}}
         placeholder="* * * * * * *"
-        secureTextEntry={true}
+        secureTextEntry
       />
       <StyledButton label="Create Account" onPress={handleSubmit(onSubmit)} />
+      {Object.keys(errors).length > 0 && (
+        <Text style={styles.errorText}>
+          Please fill in all required fields.
+        </Text>
+      )}
       <Text>OR</Text>
       <SocialButtons />
     </AuthContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  errorText: {
+    color: 'red',
+    marginTop: 10,
+  },
+});
 
 export default Signup;
