@@ -10,7 +10,7 @@ import HomeContainer from '../../container/HomeContainer';
 <<<<<<< HEAD
 import UserInfotab from '../../components/UserInfotab';
 import Card from '../../components/Card';
-import {FlatList} from 'react-native-gesture-handler';
+import {FlatList} from 'react-native';
 import Chat from './Chat';
 =======
 import ActionButton from 'react-native-action-button';
