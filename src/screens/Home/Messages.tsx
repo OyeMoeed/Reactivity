@@ -7,10 +7,15 @@ import {
 } from 'react-native';
 import React from 'react';
 import HomeContainer from '../../container/HomeContainer';
+<<<<<<< HEAD
 import UserInfotab from '../../components/UserInfotab';
 import Card from '../../components/Card';
 import {FlatList} from 'react-native-gesture-handler';
 import Chat from './Chat';
+=======
+import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+>>>>>>> HomeScreen
 
 const Message = [
   {
@@ -58,6 +63,7 @@ const Message = [
 const Messages = ({navigation}) => {
   return (
     <HomeContainer>
+<<<<<<< HEAD
       <FlatList
         data={Message}
         keyExtractor={item => item.id}
@@ -74,6 +80,14 @@ const Messages = ({navigation}) => {
           </TouchableOpacity>
         )}
       />
+=======
+      <Text>Messages</Text>
+      <ActionButton>
+        <ActionButton.Item title="Start a new Chat" onPress={() => {}}>
+          <Icon name="camera" />
+        </ActionButton.Item>
+      </ActionButton>
+>>>>>>> HomeScreen
     </HomeContainer>
   );
 };

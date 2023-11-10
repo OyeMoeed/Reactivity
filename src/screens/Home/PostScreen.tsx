@@ -14,7 +14,11 @@ const PostScreen = ({item}) => {
         <UserInfotab source={item.userImg}>{item.userName}</UserInfotab>
         <PostText>{item.post}</PostText>
         <PostImage source={item.postImg} />
+<<<<<<< HEAD
         <Text style={style.time}>{item.postTime}</Text>
+=======
+        <Text style={style.text}>{item.postTime}</Text>
+>>>>>>> HomeScreen
         <Interactions />
       </Card>
     </HomeContainer>
@@ -22,11 +26,17 @@ const PostScreen = ({item}) => {
 };
 
 export default PostScreen;
+<<<<<<< HEAD
 
 const style = StyleSheet.create({
   time: {
     paddingVertical: 10,
     fontSize: 10,
     color: '#808080',
+=======
+const style = StyleSheet.create({
+  text: {
+    paddingVertical: 15,
+>>>>>>> HomeScreen
   },
 });

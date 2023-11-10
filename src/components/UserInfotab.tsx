@@ -5,8 +5,8 @@ const UserInfotab = ({source, children}) => {
   return (
     <View style={style.UserInfobar}>
       <Image source={source} alt="/" style={style.avatarSize} />
-      <UserName />
-      <Text>{children}</Text>
+
+      <UserName>{children}</UserName>
     </View>
   );
 };
