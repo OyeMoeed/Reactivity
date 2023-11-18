@@ -25,5 +25,7 @@ export default PostScreen;
 const style = StyleSheet.create({
   text: {
     paddingVertical: 15,
+    fontSize: 10,
+    color: '#777777',
   },
 });

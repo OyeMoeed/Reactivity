@@ -1,8 +1,7 @@
 import {View, Text, FlatList} from 'react-native';
 import React from 'react';
 import PostScreen from './PostScreen';
-import UserInfotab from '../../components/UserInfotab';
-import UserName from '../../components/UserName';
+
 const Posts = [
   {
     id: '1',

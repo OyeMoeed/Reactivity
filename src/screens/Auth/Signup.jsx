@@ -17,8 +17,8 @@ const Signup = ({navigation}) => {
   const {signup} = useContext(AuthContext);
 
   const onSubmit = data => {
-    const {email, password} = data;
-    signup(email, password);
+    const {name, email, password} = data;
+    signup(name, email, password);
   };
 
   return (

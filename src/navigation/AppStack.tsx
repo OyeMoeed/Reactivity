@@ -72,7 +72,7 @@ const FeedStack = ({navigation}) => (
 const MessageStack = ({navigation}) => (
   <Stack.Navigator>
     <Stack.Screen
-      name="Messages"
+      name="MessagesStack"
       component={Messages}
       options={{headerBackTitleVisible: false, headerShown: false}}
     />
@@ -90,7 +90,7 @@ const MessageStack = ({navigation}) => (
 const ProfileStack = ({navigation}) => (
   <Stack.Navigator>
     <Stack.Screen
-      name="Profile"
+      name="ProfileStack"
       component={Profile}
       options={{
         headerShown: false,
