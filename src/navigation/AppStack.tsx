@@ -8,6 +8,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Messages from '../screens/Home/Messages';
 import ChatScreen from '../screens/Home/ChatScreen';
 import {View} from 'react-native';
+import PostData from '../firebase/PostData';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -66,6 +67,11 @@ const FeedStack = ({navigation}) => (
         ),
       }}
     />
+    <Stack.Screen
+      name="Posts"
+      component={PostData}
+      options={{headerBackTitleVisible: false}}
+    />
   </Stack.Navigator>
 );
 
@@ -114,7 +120,7 @@ const AppStack = () => {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name="h"
+        name="Feed"
         component={FeedStack}
         options={({route}) => ({
           tabBarShowLabel: false,
