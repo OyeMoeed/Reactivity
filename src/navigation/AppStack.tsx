@@ -8,7 +8,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Messages from '../screens/Home/Messages';
 import ChatScreen from '../screens/Home/ChatScreen';
 import {View} from 'react-native';
-import PostData from '../firebase/PostData';
+import SearchUsers from '../screens/Home/SearchUsers';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -66,11 +66,6 @@ const FeedStack = ({navigation}) => (
           </View>
         ),
       }}
-    />
-    <Stack.Screen
-      name="Posts"
-      component={PostData}
-      options={{headerBackTitleVisible: false}}
     />
   </Stack.Navigator>
 );
@@ -139,6 +134,17 @@ const AppStack = () => {
 
           tabBarIcon: ({color, size}) => (
             <Icon name="add-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={SearchUsers}
+        options={{
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarIcon: ({color, size}) => (
+            <Icon name="search-outline" color={color} size={size} />
           ),
         }}
       />
