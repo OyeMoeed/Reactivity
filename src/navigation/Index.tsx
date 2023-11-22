@@ -4,6 +4,7 @@ import Routes from './Routex';
 import {bindActionCreators} from 'redux';
 import {fetchUser} from '../redux/actions';
 import {connect} from 'react-redux';
+import store from '../redux/store';
 
 export class Index extends Component {
   componentDidMount(): void {
@@ -19,5 +20,8 @@ export class Index extends Component {
 }
 
 const mapDispatchUser = dispatch => bindActionCreators({fetchUser}, dispatch);
+const mapDispatchStore = store => ({
+  currentUser: store.userState.currentUser,
+});
 
-export default connect(null, mapDispatchUser)(Index);
+export default connect(mapDispatchStore, mapDispatchUser)(Index);

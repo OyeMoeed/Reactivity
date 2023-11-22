@@ -45,7 +45,7 @@ const FeedStack = ({navigation}) => (
     <Stack.Screen
       name="Messages"
       component={MessageStack}
-      options={{headerBackTitleVisible: false}}
+      options={{headerBackTitleVisible: false, headerShown: false}}
     />
 
     <Stack.Screen
@@ -73,17 +73,17 @@ const FeedStack = ({navigation}) => (
 const MessageStack = ({navigation}) => (
   <Stack.Navigator>
     <Stack.Screen
-      name="MessagesStack"
-      component={Messages}
-      options={{headerBackTitleVisible: false, headerShown: false}}
-    />
-    <Stack.Screen
       name="Chat"
       component={ChatScreen}
       options={({route}) => ({
-        title: route.params.userName,
+        //title: route.params.userName,
         headerBackTitleVisible: false,
       })}
+    />
+    <Stack.Screen
+      name="MessagesStack"
+      component={Messages}
+      options={{headerBackTitleVisible: false, headerShown: false}}
     />
   </Stack.Navigator>
 );
