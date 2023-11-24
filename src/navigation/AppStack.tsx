@@ -22,7 +22,6 @@ const FeedStack = ({navigation}) => (
         headerTitleAlign: 'center',
         headerTitleStyle: {
           color: '#2e64e5',
-          fontFamily: 'Kufam-SemiBoldItalic',
           fontSize: 18,
         },
         headerStyle: {
@@ -32,9 +31,8 @@ const FeedStack = ({navigation}) => (
         headerRight: () => (
           <View style={{marginRight: 10}}>
             <Icon
-              name="chatbox-outline"
+              name="paper-plane-outline"
               size={22}
-              backgroundColor="#fff"
               color="#2e64e5"
               onPress={() => navigation.navigate('Messages')}
             />
@@ -76,7 +74,7 @@ const MessageStack = ({navigation}) => (
       name="Chat"
       component={ChatScreen}
       options={({route}) => ({
-        //title: route.params.userName,
+        //title: route.params.name,
         headerBackTitleVisible: false,
       })}
     />
@@ -101,17 +99,6 @@ const ProfileStack = ({navigation}) => (
 );
 
 const AppStack = () => {
-  const getTabBarVisibility = route => {
-    const routeName = route.state
-      ? route.state.routes[route.state.index].name
-      : '';
-
-    if (routeName === 'Chat') {
-      return false;
-    }
-    return true;
-  };
-
   return (
     <Tab.Navigator>
       <Tab.Screen

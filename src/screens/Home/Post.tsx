@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {TextInput, StyleSheet, Image, View} from 'react-native';
+import {
+  TextInput,
+  StyleSheet,
+  Image,
+  View,
+  Modal,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
 import Container from '../../container/AuthContainer';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -16,6 +24,9 @@ const Post = ({navigation}) => {
   const [image, setImage] = useState(null);
   const [caption, setCaption] = useState('');
 
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  
   const handleImageSelection = (response: ImagePickerResponse) => {
     if (!response.didCancel && response.assets && response.assets.length > 0) {
       const selectedImage = response.assets[0];
@@ -46,44 +57,60 @@ const Post = ({navigation}) => {
     };
     launchCamera(options, handleImageSelection);
   };
-
   const uploadImageToFirebase = async () => {
     try {
       if (image) {
         const imageName = generateUniqueFileName();
-        const reference = storage()
+        const imageRef = storage()
           .ref()
           .child(`post/${firebase.auth().currentUser?.email}/${imageName}`);
-        await reference.putFile(image);
-        const downloadURL = await reference.getDownloadURL();
+
+        const response = await fetch(image);
+        const blob = await response.blob();
+
+        // Track upload progress
+        const uploadTask = imageRef.put(blob);
+        uploadTask.on('state_changed', snapshot => {
+          const progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+          );
+          setUploadProgress(progress);
+        });
+
+        setUploading(true);
+
+        await uploadTask;
+
+        // Get the download URL from the snapshot
+        const downloadURL = await imageRef.getDownloadURL();
         console.log('Image uploaded. Download URL:', downloadURL);
 
         savePostData(downloadURL); // Pass the downloadURL to savePostData function
       } else {
-        console.warn('No image selected.');
+        alert('No image selected.');
       }
     } catch (error) {
       console.error('Error uploading image to Firebase:', error);
+    } finally {
+      setUploading(false);
     }
   };
-
   const savePostData = async downloadUrl => {
-    // Make sure savePostData is an async function
     try {
-      const currentUser = firebase.auth().currentUser?.email;
+      const currentUser = firebase.auth().currentUser;
       if (currentUser) {
+        const {uid} = currentUser; // Retrieve the UID directly from the user object
         await firebase
           .firestore()
           .collection('posts')
-          .doc(currentUser?.email)
-          .collection('userPosts')
+          .doc(uid) // Use the user's UID directly
+          .collection('uploads')
           .add({
-            downloadUrl, // Use the passed downloadUrl value
+            creation: firebase.firestore.FieldValue.serverTimestamp(),
+            downloadUrl,
             caption,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(), // Optional timestamp field
           });
 
-        console.log('Post data saved successfully.');
         navigation.reset({
           index: 0,
           routes: [{name: 'Feed'}],
@@ -95,6 +122,7 @@ const Post = ({navigation}) => {
       console.error('Error saving post data:', error);
     }
   };
+
   return (
     <Container>
       {image && <Image source={{uri: image}} style={styles.selectedImage} />}
@@ -117,6 +145,15 @@ const Post = ({navigation}) => {
           <Icon name="browse-gallery" style={styles.actionButtonIcon} />
         </ActionButton.Item>
       </ActionButton>
+      <Modal visible={uploading} transparent={true} animationType="fade">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text>Uploading...</Text>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text>{uploadProgress}%</Text>
+          </View>
+        </View>
+      </Modal>
     </Container>
   );
 };
@@ -138,5 +175,17 @@ const styles = StyleSheet.create({
     height: 400,
     resizeMode: 'cover',
     marginBottom: 3,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
   },
 });
