@@ -9,6 +9,7 @@ import Messages from '../screens/Home/Messages';
 import ChatScreen from '../screens/Home/ChatScreen';
 import {View} from 'react-native';
 import SearchUsers from '../screens/Home/SearchUsers';
+import {firebase} from '@react-native-firebase/auth';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -43,6 +44,11 @@ const FeedStack = ({navigation}) => (
     <Stack.Screen
       name="Messages"
       component={MessageStack}
+      options={{headerBackTitleVisible: false, headerShown: false}}
+    />
+    <Stack.Screen
+      name="Search"
+      component={SearchUsers}
       options={{headerBackTitleVisible: false, headerShown: false}}
     />
 
@@ -98,7 +104,7 @@ const ProfileStack = ({navigation}) => (
   </Stack.Navigator>
 );
 
-const AppStack = () => {
+const AppStack = ({item}) => {
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -138,6 +144,14 @@ const AppStack = () => {
       <Tab.Screen
         name="Profile"
         component={ProfileStack}
+        listeners={({navigation}) => ({
+          tabPress: event => {
+            event.preventDefault();
+            navigation.navigate('Profile', {
+              uid: firebase.auth().currentUser?.uid,
+            });
+          },
+        })}
         options={{
           tabBarShowLabel: false,
           headerShown: false,

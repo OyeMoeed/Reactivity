@@ -1,38 +1,98 @@
-import {View, Text, TextInput, StyleSheet} from 'react-native';
-import React from 'react';
-import HomeContainer from '../../container/HomeContainer';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
+import ProfileContainer from '../../container/ProfileContainer';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {firebase} from '@react-native-firebase/auth';
 
-const SearchUsers = () => {
+const SearchUsers = ({navigation}) => {
+  const [searchInput, setSearchInput] = useState('');
+  const [users, setUsers] = useState([]);
+
+  // Fetch users from Firebase
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const snapshot = await firebase
+        .firestore()
+        .collection('Users')
+        .where('name', '>=', searchInput)
+        .get();
+
+      const userData = snapshot.docs.map(doc => {
+        const data = doc.data();
+        const id = doc.id;
+        return {id, ...data};
+      });
+      setUsers(userData);
+    };
+
+    fetchUsers();
+  }, [searchInput]);
+
+  const renderItem = ({item}) => {
+    if (!item || typeof item !== 'object' || !item.id || !item.name) {
+      return null;
+    }
+
+    return (
+      <TouchableOpacity
+        style={styles.userContainer}
+        onPress={() => {
+          if (item.id) {
+            console.log('Navigating to Profile with uid:', item.id);
+            navigation.navigate('Profile', {uid: item.id});
+          } else {
+            console.log('Item ID is undefined:', item);
+          }
+        }}>
+        <Text style={styles.userName}>{item.name}</Text>
+      </TouchableOpacity>
+    );
+  };
+
   return (
-    <HomeContainer>
-      <View style={styles.container}>
-        <TextInput
-          style={styles.input}
-          placeholder="Search"
-          placeholderTextColor="#888"
-          numberOfLines={1}
-        />
+    <ProfileContainer>
+      <View style={styles.searchContainer}>
         <Icon
           name="search-outline"
           size={20}
           color="#333"
           style={styles.searchIcon}
         />
+        <TextInput
+          style={styles.input}
+          placeholder="Search users"
+          placeholderTextColor="#999"
+          onChangeText={text => setSearchInput(text)}
+          value={searchInput}
+        />
       </View>
-    </HomeContainer>
+      <FlatList
+        data={users}
+        renderItem={renderItem}
+        keyExtractor={item => item.id.toString()}
+        contentContainerStyle={styles.flatListContent}
+      />
+    </ProfileContainer>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    padding: 10,
     backgroundColor: '#d3d3d35b',
     borderColor: '#ccc',
     borderRadius: 15,
     marginHorizontal: 20,
+    marginBottom: 10,
   },
   searchIcon: {
     marginRight: 10,
@@ -40,8 +100,29 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    height: 40,
     color: '#333',
+  },
+  userContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 15,
+    marginVertical: 8,
+    padding: 15,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  userName: {
+    fontSize: 16,
+    color: '#333',
+  },
+  flatListContent: {
+    paddingBottom: 20,
+    paddingHorizontal: 20,
   },
 });
 

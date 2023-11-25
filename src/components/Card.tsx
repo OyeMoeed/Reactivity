@@ -13,12 +13,18 @@ export default Card;
 
 const style = StyleSheet.create({
   card: {
-    borderRadius: 15,
-    padding: 10,
     paddingHorizontal: 20,
-    marginVertical: 10,
-    backgroundColor: '#D3D3D37B',
-    width: '90%',
-    alignContent: 'center',
+    backgroundColor: '#F5F5F5',
+    borderRadius: 20,
+    margin: 10,
+    padding: 15,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
