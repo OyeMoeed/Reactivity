@@ -92,7 +92,7 @@ const MessageStack = ({navigation}) => (
   </Stack.Navigator>
 );
 
-const ProfileStack = ({navigation}) => (
+const ProfileStack = ({navigation: {setParams}}) => (
   <Stack.Navigator>
     <Stack.Screen
       name="ProfileStack"
@@ -104,7 +104,7 @@ const ProfileStack = ({navigation}) => (
   </Stack.Navigator>
 );
 
-const AppStack = ({item}) => {
+const AppStack = props => {
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -144,17 +144,11 @@ const AppStack = ({item}) => {
       <Tab.Screen
         name="Profile"
         component={ProfileStack}
-        listeners={({navigation}) => ({
-          tabPress: event => {
-            event.preventDefault();
-            navigation.navigate('Profile', {
-              uid: firebase.auth().currentUser?.uid,
-            });
-          },
-        })}
+        initialParams={{uid: firebase.auth().currentUser?.uid}}
         options={{
           tabBarShowLabel: false,
           headerShown: false,
+
           tabBarIcon: ({color, size}) => (
             <Icon name="person-outline" color={color} size={size} />
           ),

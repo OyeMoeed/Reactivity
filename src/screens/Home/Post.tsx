@@ -26,7 +26,7 @@ const Post = ({navigation}) => {
 
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  
+
   const handleImageSelection = (response: ImagePickerResponse) => {
     if (!response.didCancel && response.assets && response.assets.length > 0) {
       const selectedImage = response.assets[0];

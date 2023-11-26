@@ -21,7 +21,8 @@ const SearchUsers = ({navigation}) => {
       const snapshot = await firebase
         .firestore()
         .collection('Users')
-        .where('name', '>=', searchInput)
+        .where('name', '>=', searchInput.trim())
+        .where('name', '<=', searchInput.trim() + '\uf8ff')
         .get();
 
       const userData = snapshot.docs.map(doc => {
@@ -36,10 +37,6 @@ const SearchUsers = ({navigation}) => {
   }, [searchInput]);
 
   const renderItem = ({item}) => {
-    if (!item || typeof item !== 'object' || !item.id || !item.name) {
-      return null;
-    }
-
     return (
       <TouchableOpacity
         style={styles.userContainer}
