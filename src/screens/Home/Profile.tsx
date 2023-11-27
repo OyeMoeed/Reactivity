@@ -3,25 +3,23 @@ import {View, Text, Image, StyleSheet, FlatList} from 'react-native';
 import ProfileContainer from '../../container/ProfileContainer';
 import {connect} from 'react-redux';
 import {firebase} from '@react-native-firebase/auth';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useRoute} from '@react-navigation/native';
 
-const Profile = ({currentUser, posts}) => {
+const Profile = ({currentUser, posts, route, navigation}) => {
   const [userPosts, setUserPosts] = useState([]);
   const [user, setUser] = useState(null);
 
-  const route = useRoute();
-  const {uid} = route.params;
+  // const {uid} = route.params;
+  console.log(route.params);
 
   useEffect(() => {
-    if (uid === firebase.auth().currentUser?.uid) {
+    if (route.params.uid === firebase.auth().currentUser?.uid) {
       setUser(currentUser);
       setUserPosts(posts);
     } else {
       firebase
         .firestore()
         .collection('Users')
-        .doc(uid)
+        .doc(route.params.uid)
         .get()
         .then(snapshot => {
           if (snapshot.exists) {
@@ -39,7 +37,7 @@ const Profile = ({currentUser, posts}) => {
       firebase
         .firestore()
         .collection('posts')
-        .doc(uid)
+        .doc(route.params.uid)
         .collection('uploads')
         .orderBy('creation', 'desc')
         .get()
@@ -55,7 +53,7 @@ const Profile = ({currentUser, posts}) => {
           console.error('Error fetching posts:', error);
         });
     }
-  }, [currentUser, posts, uid]);
+  }, [route.params.uid, currentUser, posts]);
 
   // Render user information conditionally
   return (

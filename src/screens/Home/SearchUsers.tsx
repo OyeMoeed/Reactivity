@@ -43,7 +43,7 @@ const SearchUsers = ({navigation}) => {
         onPress={() => {
           if (item.id) {
             console.log('Navigating to Profile with uid:', item.id);
-            navigation.navigate('Profile', {uid: item.id});
+            navigation.navigate('HomeProfile', {uid: item.id});
           } else {
             console.log('Item ID is undefined:', item);
           }

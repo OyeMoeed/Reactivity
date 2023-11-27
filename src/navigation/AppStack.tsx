@@ -19,7 +19,7 @@ const FeedStack = ({navigation}) => (
     <Stack.Screen
       name="RN Social"
       component={Home}
-      options={{
+      options={({route}) => ({
         headerTitleAlign: 'center',
         headerTitleStyle: {
           color: '#2e64e5',
@@ -39,24 +39,30 @@ const FeedStack = ({navigation}) => (
             />
           </View>
         ),
-      }}
+      })}
     />
     <Stack.Screen
       name="Messages"
       component={MessageStack}
-      options={{headerBackTitleVisible: false, headerShown: false}}
+      options={({route}) => ({
+        headerBackTitleVisible: false,
+        headerShown: false,
+      })}
     />
     <Stack.Screen
       name="Search"
       component={SearchUsers}
-      options={{headerBackTitleVisible: false, headerShown: false}}
+      options={({route}) => ({
+        headerBackTitleVisible: false,
+        headerShown: false,
+      })}
     />
 
     <Stack.Screen
       name="HomeProfile"
       component={Profile}
-      options={{
-        title: '',
+      options={({route}) => ({
+        title: 'Profile',
         headerTitleAlign: 'center',
         headerStyle: {
           backgroundColor: '#fff',
@@ -64,12 +70,9 @@ const FeedStack = ({navigation}) => (
           elevation: 0,
         },
         headerBackTitleVisible: false,
-        headerBackImage: () => (
-          <View style={{marginLeft: 15}}>
-            <Ionicons name="arrow-back" size={25} color="#2e64e5" />
-          </View>
-        ),
-      }}
+        headerShown: false,
+        uid: route.params?.uid, // Set uid from route.params
+      })}
     />
   </Stack.Navigator>
 );
@@ -80,31 +83,41 @@ const MessageStack = ({navigation}) => (
       name="Chat"
       component={ChatScreen}
       options={({route}) => ({
-        //title: route.params.name,
         headerBackTitleVisible: false,
+        headerShown: false,
       })}
     />
     <Stack.Screen
       name="MessagesStack"
       component={Messages}
-      options={{headerBackTitleVisible: false, headerShown: false}}
-    />
-  </Stack.Navigator>
-);
-
-const ProfileStack = ({navigation: {setParams}}) => (
-  <Stack.Navigator>
-    <Stack.Screen
-      name="ProfileStack"
-      component={Profile}
-      options={{
+      options={({route}) => ({
+        headerBackTitleVisible: false,
         headerShown: false,
-      }}
+      })}
     />
   </Stack.Navigator>
 );
 
-const AppStack = props => {
+const ProfileStack = ({route}) => {
+  const {uid} = route.params || {}; // Destructure uid from route.params or set to undefined
+
+  return (
+    <Stack.Navigator initialRouteName="ProfileScreen" initialParams={{uid}}>
+      <Stack.Screen
+        name="ProfileScreen"
+        component={Profile}
+        options={({navigation, route}) => ({
+          headerShown: false,
+        })}
+      />
+      {/* Add other screens if needed */}
+    </Stack.Navigator>
+  );
+};
+
+const AppStack = route => {
+  const currentUserUID = firebase.auth().currentUser?.uid; // Get current user's UID
+
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -121,38 +134,36 @@ const AppStack = props => {
       <Tab.Screen
         name="AddPost"
         component={Post}
-        options={{
+        options={({route}) => ({
           tabBarShowLabel: false,
           headerShown: false,
 
           tabBarIcon: ({color, size}) => (
             <Icon name="add-outline" color={color} size={size} />
           ),
-        }}
+        })}
       />
       <Tab.Screen
         name="Search"
         component={SearchUsers}
-        options={{
+        options={({route}) => ({
           tabBarShowLabel: false,
           headerShown: false,
           tabBarIcon: ({color, size}) => (
             <Icon name="search-outline" color={color} size={size} />
           ),
-        }}
+        })}
       />
       <Tab.Screen
         name="Profile"
+        initialParams={{uid: currentUserUID}} // Pass the UID of the current user
         component={ProfileStack}
-        initialParams={{uid: firebase.auth().currentUser?.uid}}
-        options={{
+        options={({route}) => ({
           tabBarShowLabel: false,
-          headerShown: false,
-
           tabBarIcon: ({color, size}) => (
             <Icon name="person-outline" color={color} size={size} />
           ),
-        }}
+        })}
       />
     </Tab.Navigator>
   );
