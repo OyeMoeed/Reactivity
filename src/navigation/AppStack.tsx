@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import Home from '../screens/Home/Home';
 import Post from '../screens/Home/Post';
 import Profile from '../screens/Home/Profile';
@@ -10,6 +10,8 @@ import ChatScreen from '../screens/Home/ChatScreen';
 import {View} from 'react-native';
 import SearchUsers from '../screens/Home/SearchUsers';
 import {firebase} from '@react-native-firebase/auth';
+import UserProfile from '../screens/Home/UserProfile';
+import {AuthContext} from '../firebase/AuthProvider';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -62,6 +64,11 @@ const FeedStack = ({navigation}) => (
       name="HomeProfile"
       component={Profile}
       options={({route}) => ({
+        headerRight: () => (
+          <View style={{marginRight: 10}}>
+            <Icon name="person-add-outline" size={22} color="#2e64e5" />
+          </View>
+        ),
         title: 'Profile',
         headerTitleAlign: 'center',
         headerStyle: {
@@ -70,7 +77,6 @@ const FeedStack = ({navigation}) => (
           elevation: 0,
         },
         headerBackTitleVisible: false,
-        headerShown: false,
         uid: route.params?.uid, // Set uid from route.params
       })}
     />
@@ -105,7 +111,7 @@ const ProfileStack = ({route}) => {
     <Stack.Navigator initialRouteName="ProfileScreen" initialParams={{uid}}>
       <Stack.Screen
         name="ProfileScreen"
-        component={Profile}
+        component={UserProfile}
         options={({navigation, route}) => ({
           headerShown: false,
         })}
@@ -117,6 +123,7 @@ const ProfileStack = ({route}) => {
 
 const AppStack = route => {
   const currentUserUID = firebase.auth().currentUser?.uid; // Get current user's UID
+  const {signout} = useContext(AuthContext);
 
   return (
     <Tab.Navigator>
@@ -162,6 +169,16 @@ const AppStack = route => {
           tabBarShowLabel: false,
           tabBarIcon: ({color, size}) => (
             <Icon name="person-outline" color={color} size={size} />
+          ),
+          headerRight: () => (
+            <View style={{marginRight: 10}}>
+              <Icon
+                name="log-out-outline"
+                size={22}
+                color="#2e64e5"
+                onPress={signout}
+              />
+            </View>
           ),
         })}
       />
