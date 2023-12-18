@@ -1,5 +1,11 @@
 import firebase from '@react-native-firebase/app';
-import {USER_POST_STATE_CHANGE, USER_STATE_CHANGE} from '../constants';
+import {
+  USER_POST_STATE_CHANGE,
+  USER_STATE_CHANGE,
+  USER_FOLLOWING_STATE_CHANGE,
+  USERS_DATA_STATE_CHANGE,
+  USERS_POST_STATE_CHANGE,
+} from '../constants';
 
 export function fetchUser() {
   return dispatch => {
@@ -14,7 +20,6 @@ export function fetchUser() {
         .then(snapshot => {
           if (snapshot.exists) {
             const userData = snapshot.data();
-            console.log(userData);
             dispatch({type: USER_STATE_CHANGE, currentUser: userData});
           } else {
             console.log('User Does Not Exist');
@@ -32,9 +37,9 @@ export function fetchUserPosts() {
   return dispatch => {
     firebase
       .firestore()
-      .collection('posts')
+      .collection('Posts')
       .doc(firebase.auth().currentUser?.uid)
-      .collection('uploads')
+      .collection('Uploads')
       .orderBy('creation', 'desc')
       .get()
       .then(snapshot => {
@@ -44,6 +49,110 @@ export function fetchUserPosts() {
           return {id, ...data};
         });
         dispatch({type: USER_POST_STATE_CHANGE, posts});
+      });
+  };
+}
+
+export function fetchUserfollowing() {
+  return dispatch => {
+    firebase
+      .firestore()
+      .collection('Following')
+      .doc(firebase.auth().currentUser?.uid)
+      .collection('isFollowing')
+      .onSnapshot(snapshot => {
+        if (snapshot) {
+          let following = snapshot.docs.map(doc => {
+            const id = doc.id;
+            return {id};
+          });
+
+          console.log('Dispatching USER_FOLLOWING_STATE_CHANGE:', {
+            following,
+          });
+
+          dispatch({type: USER_FOLLOWING_STATE_CHANGE, following});
+
+          for (let i = 0; i < following.length; i++) {
+            console.log('Inside for loop, iteration:', i);
+
+            dispatch(fetchUsersData(following[i]));
+          }
+        } else {
+          // Handle the case where the snapshot is null (possibly due to sign-out)
+          console.log('Snapshot is null. User may have signed out.');
+        }
+      });
+
+    // Returning the unsubscribe function for cleanup
+  };
+}
+
+export function fetchUsersData(uid) {
+  return (dispatch, getState) => {
+    const found = getState().usersState.users.some(el => el.uid === uid);
+    console.log('UID FOUND', uid);
+    if (!found) {
+      firebase
+        .firestore()
+        .collection('Users')
+        .doc(uid.id)
+        .get()
+        .then(snapshot => {
+          if (snapshot.exists) {
+            let user = snapshot.data();
+            user.uid = snapshot.id;
+            dispatch({type: USERS_DATA_STATE_CHANGE, user});
+            dispatch(fetchUsersFollowingData(user.uid)); // Pass the user's UID
+            console.log('User UID', user.uid);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error);
+        });
+    } else {
+      dispatch(fetchUsersFollowingData(uid)); // If user data is already present, just fetch following data
+    }
+  };
+}
+export function fetchUsersFollowingData(uid) {
+  return (dispatch, getState) => {
+    firebase
+      .firestore()
+      .collection('Posts')
+      .doc(uid)
+      .collection('Uploads')
+      .orderBy('creation', 'desc')
+      .get()
+      .then(snapshot => {
+        if (snapshot.docs.length > 0) {
+          const uidFromSnapshot = snapshot.docs[0].ref.path.split('/')[1];
+          const user = getState().usersState.users.find(
+            el => el.uid === uidFromSnapshot,
+          );
+          console.log('ALALALAL', uidFromSnapshot);
+
+          let posts = snapshot.docs.map(doc => {
+            const data = doc.data();
+            const id = doc.id;
+            return {id, ...data, user};
+          });
+          console.log('posts=>>>>>>>>>>>>>>', posts);
+          dispatch({
+            type: USERS_POST_STATE_CHANGE,
+            posts,
+            uid: uidFromSnapshot,
+          });
+          console.log('Dispatched');
+        } else {
+          console.warn('No documents found in the snapshot for UID:', uid);
+          // Handle the case where no documents are found, if needed
+          // For example, you might dispatch an action to update the state with a specific flag
+          // dispatch({ type: NO_DOCUMENTS_FOUND_ACTION, uid });
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching users following data:', error);
       });
   };
 }

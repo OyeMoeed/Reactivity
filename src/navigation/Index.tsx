@@ -2,13 +2,14 @@ import React, {Component} from 'react';
 import {AuthProvider} from '../firebase/AuthProvider';
 import Routes from './Routex';
 import {bindActionCreators} from 'redux';
-import {fetchUser, fetchUserPosts} from '../redux/actions';
+import {fetchUser, fetchUserPosts, fetchUserfollowing} from '../redux/actions';
 import {connect} from 'react-redux';
 
 export class Index extends Component {
   componentDidMount(): void {
     this.props.fetchUserPosts();
     this.props.fetchUser();
+    this.props.fetchUserfollowing();
   }
   render(): React.ReactNode {
     return (
@@ -20,7 +21,7 @@ export class Index extends Component {
 }
 
 const mapDispatchUser = dispatch =>
-  bindActionCreators({fetchUser, fetchUserPosts}, dispatch);
+  bindActionCreators({fetchUser, fetchUserPosts, fetchUserfollowing}, dispatch);
 const mapDispatchStore = store => ({
   currentUser: store.userState.currentUser,
 });

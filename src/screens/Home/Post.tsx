@@ -99,12 +99,12 @@ const Post = ({navigation}) => {
     try {
       const currentUser = firebase.auth().currentUser;
       if (currentUser) {
-        const {uid} = currentUser; // Retrieve the UID directly from the user object
+        const {uid} = currentUser;
         await firebase
           .firestore()
-          .collection('posts')
+          .collection('Posts')
           .doc(uid) // Use the user's UID directly
-          .collection('uploads')
+          .collection('Uploads')
           .add({
             creation: firebase.firestore.FieldValue.serverTimestamp(),
             downloadUrl,

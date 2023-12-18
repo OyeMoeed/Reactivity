@@ -1,128 +1,127 @@
 import React, {useContext} from 'react';
-import Home from '../screens/Home/Home';
-import Post from '../screens/Home/Post';
-import Profile from '../screens/Home/Profile';
+import {View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
+import {firebase} from '@react-native-firebase/auth';
+import {AuthContext} from '../firebase/AuthProvider';
+
+import Post from '../screens/Home/Post';
+import Profile from '../screens/Home/Profile';
 import Messages from '../screens/Home/Messages';
 import ChatScreen from '../screens/Home/ChatScreen';
-import {View} from 'react-native';
 import SearchUsers from '../screens/Home/SearchUsers';
-import {firebase} from '@react-native-firebase/auth';
 import UserProfile from '../screens/Home/UserProfile';
-import {AuthContext} from '../firebase/AuthProvider';
+import PostScreen from '../screens/Home/PostScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const FeedStack = ({navigation}) => (
-  <Stack.Navigator>
-    <Stack.Screen
-      name="RN Social"
-      component={Home}
-      options={({route}) => ({
-        headerTitleAlign: 'center',
-        headerTitleStyle: {
-          color: '#2e64e5',
-          fontSize: 18,
-        },
-        headerStyle: {
-          shadowColor: '#fff',
-          elevation: 0,
-        },
-        headerRight: () => (
-          <View style={{marginRight: 10}}>
-            <Icon
-              name="paper-plane-outline"
-              size={22}
-              color="#2e64e5"
-              onPress={() => navigation.navigate('Messages')}
-            />
-          </View>
-        ),
-      })}
-    />
-    <Stack.Screen
-      name="Messages"
-      component={MessageStack}
-      options={({route}) => ({
-        headerBackTitleVisible: false,
-        headerShown: false,
-      })}
-    />
-    <Stack.Screen
-      name="Search"
-      component={SearchUsers}
-      options={({route}) => ({
-        headerBackTitleVisible: false,
-        headerShown: false,
-      })}
-    />
+export default function FeedStack(uid) {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="RN Social"
+        component={PostScreen}
+        options={{
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            color: '#2e64e5',
+            fontSize: 18,
+          },
+          headerStyle: {
+            shadowColor: '#fff',
+            elevation: 0,
+          },
+          headerRight: ({navigation}) => (
+            <View style={{marginRight: 10}}>
+              <Icon
+                name="paper-plane-outline"
+                size={22}
+                color="#2e64e5"
+                onPress={() => navigation.replace('Messages')}
+              />
+            </View>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Messages"
+        component={Messages}
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: false,
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
 
-    <Stack.Screen
-      name="HomeProfile"
-      component={Profile}
-      options={({route}) => ({
-        headerRight: () => (
-          <View style={{marginRight: 10}}>
-            <Icon name="person-add-outline" size={22} color="#2e64e5" />
-          </View>
-        ),
-        title: 'Profile',
-        headerTitleAlign: 'center',
-        headerStyle: {
-          backgroundColor: '#fff',
-          shadowColor: '#fff',
-          elevation: 0,
-        },
-        headerBackTitleVisible: false,
-        uid: route.params?.uid, // Set uid from route.params
-      })}
-    />
-  </Stack.Navigator>
-);
+export default function PostStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen component={Post} name="Post" />
+    </Stack.Navigator>
+  );
+}
 
-const MessageStack = ({navigation}) => (
-  <Stack.Navigator>
-    <Stack.Screen
-      name="Chat"
-      component={ChatScreen}
-      options={({route}) => ({
-        headerBackTitleVisible: false,
-        headerShown: false,
-      })}
-    />
-    <Stack.Screen
-      name="MessagesStack"
-      component={Messages}
-      options={({route}) => ({
-        headerBackTitleVisible: false,
-        headerShown: false,
-      })}
-    />
-  </Stack.Navigator>
-);
+export default function SearchStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Search"
+        component={SearchUsers}
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="HomeProfile"
+        component={Profile}
+        options={({route}) => ({
+          title: 'Profile',
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: '#fff',
+            shadowColor: '#fff',
+            elevation: 0,
+          },
+          headerBackTitleVisible: false,
+          uid: route.params?.uid,
+        })}
+      />
+    </Stack.Navigator>
+  );
+}
 
-const ProfileStack = ({route}) => {
-  const {uid} = route.params || {}; // Destructure uid from route.params or set to undefined
+export default function ProfileStack(route) {
+  const {uid} = route.params || {};
 
   return (
-    <Stack.Navigator initialRouteName="ProfileScreen" initialParams={{uid}}>
+    <Stack.Navigator>
       <Stack.Screen
         name="ProfileScreen"
         component={UserProfile}
-        options={({navigation, route}) => ({
+        options={{
+          headerBackTitleVisible: false,
           headerShown: false,
-        })}
+        }}
       />
-      {/* Add other screens if needed */}
     </Stack.Navigator>
   );
-};
+}
 
-const AppStack = route => {
-  const currentUserUID = firebase.auth().currentUser?.uid; // Get current user's UID
+const AppStack = () => {
+  const currentUserUID = firebase.auth().currentUser?.uid;
   const {signout} = useContext(AuthContext);
 
   return (
@@ -130,43 +129,45 @@ const AppStack = route => {
       <Tab.Screen
         name="Feed"
         component={FeedStack}
-        options={({route}) => ({
+        options={{
           tabBarShowLabel: false,
           headerShown: false,
           tabBarIcon: ({color, size}) => (
             <Icon name="home-outline" color={color} size={size} />
           ),
-        })}
+        }}
       />
       <Tab.Screen
         name="AddPost"
-        component={Post}
-        options={({route}) => ({
+        component={PostStack}
+        options={{
           tabBarShowLabel: false,
           headerShown: false,
-
           tabBarIcon: ({color, size}) => (
             <Icon name="add-outline" color={color} size={size} />
           ),
-        })}
+        }}
       />
       <Tab.Screen
-        name="Search"
-        component={SearchUsers}
-        options={({route}) => ({
+        name="SearchStack"
+        component={SearchStack}
+        options={{
           tabBarShowLabel: false,
           headerShown: false,
           tabBarIcon: ({color, size}) => (
             <Icon name="search-outline" color={color} size={size} />
           ),
-        })}
+        }}
       />
       <Tab.Screen
         name="Profile"
-        initialParams={{uid: currentUserUID}} // Pass the UID of the current user
+        initialParams={{uid: currentUserUID}}
         component={ProfileStack}
-        options={({route}) => ({
+        options={{
           tabBarShowLabel: false,
+          headerShadowVisible: false,
+          headerTitle: '',
+
           tabBarIcon: ({color, size}) => (
             <Icon name="person-outline" color={color} size={size} />
           ),
@@ -180,7 +181,7 @@ const AppStack = route => {
               />
             </View>
           ),
-        })}
+        }}
       />
     </Tab.Navigator>
   );

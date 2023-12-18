@@ -1,9 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, Image, StyleSheet, FlatList} from 'react-native';
 import ProfileContainer from '../../container/ProfileContainer';
+import Icons from 'react-native-vector-icons/Ionicons';
+
 import {connect} from 'react-redux';
-import {firebase} from '@react-native-firebase/auth';
-const UserProfile = ({currentUser, posts,}) => {
+const UserProfile = ({currentUser, posts}) => {
   return (
     <ProfileContainer>
       <View style={styles.userInfo}>
@@ -13,15 +14,24 @@ const UserProfile = ({currentUser, posts,}) => {
         {/* Display additional user info as needed */}
       </View>
 
-      <FlatList
-        numColumns={3}
-        data={posts}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item}) => (
-          <Image source={{uri: item.downloadUrl}} style={styles.postImage} />
-        )}
-        contentContainerStyle={styles.postList}
-      />
+      {posts && posts.length > 0 ? (
+        <FlatList
+          numColumns={3}
+          data={posts}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item}) => (
+            <Image source={{uri: item.downloadUrl}} style={styles.postImage} />
+          )}
+          contentContainerStyle={styles.postList}
+        />
+      ) : (
+        <View style={styles.userInfo}>
+          <Icons name="ban-outline" size={50} />
+          <Text style={[styles.username, {paddingTop: 10}]}>
+            Nothing to show
+          </Text>
+        </View>
+      )}
     </ProfileContainer>
   );
 };

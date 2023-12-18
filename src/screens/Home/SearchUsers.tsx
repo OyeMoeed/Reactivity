@@ -16,6 +16,8 @@ const SearchUsers = ({navigation}) => {
   const [users, setUsers] = useState([]);
 
   // Fetch users from Firebase
+  const currentUserId = firebase.auth().currentUser?.uid; // Replace 'your_current_user_id' with the actual ID of the current user
+
   useEffect(() => {
     const fetchUsers = async () => {
       const snapshot = await firebase
@@ -30,11 +32,15 @@ const SearchUsers = ({navigation}) => {
         const id = doc.id;
         return {id, ...data};
       });
-      setUsers(userData);
+
+      // Filter out the current user from the fetched users list
+      const filteredUsers = userData.filter(user => user.id !== currentUserId);
+
+      setUsers(filteredUsers);
     };
 
     fetchUsers();
-  }, [searchInput]);
+  }, [searchInput, currentUserId]);
 
   const renderItem = ({item}) => {
     return (
@@ -42,7 +48,7 @@ const SearchUsers = ({navigation}) => {
         style={styles.userContainer}
         onPress={() => {
           if (item.id) {
-            console.log('Navigating to Profile with uid:', item.id);
+            // console.log('Navigating to Profile with uid:', item.id);
             navigation.navigate('HomeProfile', {uid: item.id});
           } else {
             console.log('Item ID is undefined:', item);

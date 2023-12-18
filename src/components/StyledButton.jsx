@@ -1,4 +1,4 @@
-import {View, Text, Button, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 
 const StyledButton = ({label, onPress, ...props}) => {
@@ -15,7 +15,7 @@ export default StyledButton;
 
 const style = StyleSheet.create({
   button: {
-    width: '50%',
+    width: '100%',
     borderRadius: 10,
     padding: 10,
     paddingHorizontal: 30,
