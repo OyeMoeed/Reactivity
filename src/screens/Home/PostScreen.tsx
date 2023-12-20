@@ -8,46 +8,54 @@ import PostText from '../../components/PostText';
 import PostImage from '../../components/PostImage';
 import Interactions from '../../components/Interactions';
 
-const PostScreen = ({following, users, usersLoaded}) => {
+const PostScreen = ({following, usersLoaded, users, currentUser}) => {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     let posts = [];
-    console.log('Following', following);
-    console.log('Posts Loaded', posts);
-    console.log('usersLoaded', usersLoaded);
     if (usersLoaded === following.length) {
+      console.log('Followeing Users', following.length);
       for (let i = 0; i < following.length; i++) {
-        console.log('Inside for , iteration:', i);
-        const user = users.find(el => el.uid === following[i]);
+        const uidInFollowing = following[i].id;
+        console.log('If statement', uidInFollowing.id);
+        console.log('Users array', users); // Add this line
+        const user = users.find(el => el.uid === uidInFollowing);
+        console.log('User', user);
 
-        if (user != undefined) {
-          console.log('Userssssssss', user);
-          posts = [...posts, ...user.posts];
+        if (user) {
+          console.log('inside Post If');
+          posts = [
+            ...posts,
+            ...user.posts.map(post => ({
+              ...post,
+              creation: post.creation.toDate().toString(),
+            })),
+          ];
+          console.log(posts, 'Posts');
+        } else {
+          console.error('User not found');
         }
       }
       posts.sort(function (x, y) {
         return x.creation - y.creation;
       });
       setPosts(posts);
-      console.log('Posts Loaded', posts);
-    } else {
-      return console.log('Yo');
     }
-  }, [usersLoaded, following, users]);
+  }, [usersLoaded]);
 
   const renderItem = ({item}) => (
     <Card>
       <UserInfotab>{item.user.name}</UserInfotab>
-      <PostText>{item.user.caption}</PostText>
-      <PostImage source={item.downloadUrl} />
-      <Text>{item.creation}</Text>
+      <PostImage source={{uri: item.downloadUrl}} />
+      <PostText>{item.caption}</PostText>
+      <Text style={{fontSize: 10, paddingBottom: 10, color: '#808080'}}>
+        {item.creation}
+      </Text>
       <Interactions />
     </Card>
   );
 
   return (
     <ProfileContainer>
-      <Text>LALALALALLA</Text>
       <FlatList
         numColumns={1}
         data={posts}
@@ -86,10 +94,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = store => ({
-  posts: store.userState.posts,
   following: store.userState.following,
   users: store.usersState.users,
   usersLoaded: store.usersState.usersLoaded,
+  currentUser: store.userState.currentUser,
 });
 
 export default connect(mapStateToProps, null)(PostScreen);

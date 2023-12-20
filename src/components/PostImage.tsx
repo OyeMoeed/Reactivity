@@ -1,13 +1,10 @@
-import {View, Text, Image, StyleSheet} from 'react-native';
 import React from 'react';
+import {StyleSheet} from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 const PostImage = ({source, ...props}) => {
   if (source && source !== 'none') {
-    return (
-      <View>
-        <Image source={source} {...props} style={style.postImageSize} />
-      </View>
-    );
+    return <FastImage source={source} {...props} style={style.postImageSize} />;
   }
 
   return null; // Return null if no image source is provided or if it's 'none'
@@ -17,8 +14,7 @@ export default PostImage;
 
 const style = StyleSheet.create({
   postImageSize: {
-    width: '100%',
-    height: 250,
+    height: 300,
     marginTop: 10,
   },
 });

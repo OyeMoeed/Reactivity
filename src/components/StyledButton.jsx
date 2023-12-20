@@ -4,8 +4,8 @@ import React from 'react';
 const StyledButton = ({label, onPress, ...props}) => {
   return (
     <View>
-      <TouchableOpacity {...props} onPress={onPress} style={style.button}>
-        <Text style={style.buttonText}>{label}</Text>
+      <TouchableOpacity {...props} onPress={onPress} style={styles.button}>
+        <Text style={styles.buttonText}>{label}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -13,19 +13,19 @@ const StyledButton = ({label, onPress, ...props}) => {
 
 export default StyledButton;
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   button: {
-    width: '100%',
     borderRadius: 10,
-    padding: 10,
-    paddingHorizontal: 30,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
     marginVertical: 10,
     alignSelf: 'center',
     backgroundColor: '#4285F4',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonText: {
     color: 'white',
-    display: 'flex',
-    alignSelf: 'center',
+    fontSize: 16,
   },
 });

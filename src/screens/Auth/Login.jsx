@@ -1,5 +1,11 @@
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ImageBackground,
+} from 'react-native';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
 import SocialButtons from '../../components/SocialButtons';
@@ -22,47 +28,74 @@ const Login = ({navigation}) => {
   };
 
   return (
-    <AuthContainer>
-      <InputField
-        label="Email"
-        name="loginEmail"
-        control={control}
-        rules={{required: 'Email is required'}}
-        placeholder="Enter Your Email"
-        autoCapitalize="none"
-      />
-      <InputField
-        label="Password"
-        name="loginPassword"
-        control={control}
-        rules={{required: 'Password is required'}}
-        placeholder="********"
-        secureTextEntry={true}
-      />
-      <StyledButton label="Sign In" onPress={handleSubmit(onSubmit)} />
-      <View style={style.text}>
-        <TouchableOpacity onPress={() => navigation.navigate(ResetPassword)}>
-          <Text>Forgot Password?</Text>
-        </TouchableOpacity>
-      </View>
-      <SocialButtons />
-      <View style={style.text}>
-        <Text>Need An Account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate(Signup)}>
-          <Text> Sign Up</Text>
-        </TouchableOpacity>
-      </View>
-    </AuthContainer>
+    <ImageBackground
+      source={require('../../assets/background.jpg')}
+      style={styles.backgroundImage}
+      resizeMode="cover">
+      <AuthContainer>
+        <InputField
+          label="Email"
+          name="loginEmail"
+          control={control}
+          rules={{required: 'Email is required'}}
+          placeholder="Enter Your Email"
+          autoCapitalize="none"
+        />
+        <InputField
+          label="Password"
+          name="loginPassword"
+          control={control}
+          rules={{required: 'Password is required'}}
+          placeholder="********"
+          secureTextEntry={true}
+        />
+        <StyledButton label="Sign In" onPress={handleSubmit(onSubmit)} />
+
+        <View style={styles.text}>
+          <TouchableOpacity onPress={() => navigation.navigate(ResetPassword)}>
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          </TouchableOpacity>
+        </View>
+
+        <SocialButtons />
+
+        <View style={styles.text}>
+          <Text style={styles.signupText}>Need An Account?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate(Signup)}>
+            <Text style={styles.signupLinkText}> Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+      </AuthContainer>
+    </ImageBackground>
   );
 };
-export default Login;
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+  },
   text: {
     flexDirection: 'row',
     justifyContent: 'center',
+    marginTop: 20,
   },
-  socialView: {
-    marginVertical: 30,
+  forgotPasswordText: {
+    color: '#ffffff',
+    textDecorationLine: 'underline',
+  },
+  signupText: {
+    color: '#ffffff',
+  },
+  signupLinkText: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+    marginLeft: 5,
   },
 });
+
+export default Login;

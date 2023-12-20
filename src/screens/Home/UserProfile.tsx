@@ -1,13 +1,19 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React from 'react';
 import {View, Text, Image, StyleSheet, FlatList} from 'react-native';
 import ProfileContainer from '../../container/ProfileContainer';
 import Icons from 'react-native-vector-icons/Ionicons';
-
 import {connect} from 'react-redux';
+
 const UserProfile = ({currentUser, posts}) => {
   return (
     <ProfileContainer>
       <View style={styles.userInfo}>
+        <Image
+          source={{
+            uri: currentUser ? currentUser.profileImage : 'placeholder_url',
+          }}
+          style={styles.profileImage}
+        />
         <Text style={styles.username}>
           {currentUser ? currentUser.name : 'Loading...'}
         </Text>
@@ -50,6 +56,7 @@ const styles = StyleSheet.create({
   username: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginTop: 5,
   },
   postList: {
     paddingHorizontal: 5,
@@ -61,6 +68,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
 });
+
 const mapStateToProps = store => ({
   currentUser: store.userState.currentUser,
   posts: store.userState.posts,

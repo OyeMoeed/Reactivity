@@ -17,7 +17,7 @@ import PostScreen from '../screens/Home/PostScreen';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-export default function FeedStack(uid) {
+export function FeedStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -65,7 +65,7 @@ export default function FeedStack(uid) {
   );
 }
 
-export default function PostStack() {
+export function PostStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen component={Post} name="Post" />
@@ -73,7 +73,7 @@ export default function PostStack() {
   );
 }
 
-export default function SearchStack() {
+export function SearchStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -97,13 +97,23 @@ export default function SearchStack() {
           },
           headerBackTitleVisible: false,
           uid: route.params?.uid,
+          headerRight: ({navigation}) => (
+            <View style={{marginRight: 10}}>
+              <Icon
+                name="chatbox-outline"
+                size={22}
+                color="#2e64e5"
+                onPress={() => navigation.navigate('Chat')}
+              />
+            </View>
+          ),
         })}
       />
     </Stack.Navigator>
   );
 }
 
-export default function ProfileStack(route) {
+export function ProfileStack(route) {
   const {uid} = route.params || {};
 
   return (
@@ -132,6 +142,9 @@ const AppStack = () => {
         options={{
           tabBarShowLabel: false,
           headerShown: false,
+          headerStyle: {
+            backgroundColor: 'transparent',
+          },
           tabBarIcon: ({color, size}) => (
             <Icon name="home-outline" color={color} size={size} />
           ),
@@ -165,7 +178,6 @@ const AppStack = () => {
         component={ProfileStack}
         options={{
           tabBarShowLabel: false,
-          headerShadowVisible: false,
           headerTitle: '',
 
           tabBarIcon: ({color, size}) => (

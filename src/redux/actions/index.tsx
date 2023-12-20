@@ -55,7 +55,7 @@ export function fetchUserPosts() {
 
 export function fetchUserfollowing() {
   return dispatch => {
-    firebase
+    const unsubscribe = firebase
       .firestore()
       .collection('Following')
       .doc(firebase.auth().currentUser?.uid)
@@ -65,10 +65,6 @@ export function fetchUserfollowing() {
           let following = snapshot.docs.map(doc => {
             const id = doc.id;
             return {id};
-          });
-
-          console.log('Dispatching USER_FOLLOWING_STATE_CHANGE:', {
-            following,
           });
 
           dispatch({type: USER_FOLLOWING_STATE_CHANGE, following});
@@ -85,6 +81,7 @@ export function fetchUserfollowing() {
       });
 
     // Returning the unsubscribe function for cleanup
+    return () => unsubscribe();
   };
 }
 
@@ -122,12 +119,12 @@ export function fetchUsersFollowingData(uid) {
       .collection('Posts')
       .doc(uid)
       .collection('Uploads')
-      .orderBy('creation', 'desc')
+      .orderBy('creation', 'asc')
       .get()
       .then(snapshot => {
         if (snapshot.docs.length > 0) {
           const uidFromSnapshot = snapshot.docs[0].ref.path.split('/')[1];
-          const user = getState().usersState.users.find(
+          let user = getState().usersState.users.find(
             el => el.uid === uidFromSnapshot,
           );
           console.log('ALALALAL', uidFromSnapshot);
@@ -144,6 +141,7 @@ export function fetchUsersFollowingData(uid) {
             uid: uidFromSnapshot,
           });
           console.log('Dispatched');
+          console.log(getState());
         } else {
           console.warn('No documents found in the snapshot for UID:', uid);
           // Handle the case where no documents are found, if needed

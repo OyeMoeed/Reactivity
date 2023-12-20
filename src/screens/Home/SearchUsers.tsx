@@ -15,8 +15,7 @@ const SearchUsers = ({navigation}) => {
   const [searchInput, setSearchInput] = useState('');
   const [users, setUsers] = useState([]);
 
-  // Fetch users from Firebase
-  const currentUserId = firebase.auth().currentUser?.uid; // Replace 'your_current_user_id' with the actual ID of the current user
+  const currentUserId = firebase.auth().currentUser?.uid;
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -33,7 +32,6 @@ const SearchUsers = ({navigation}) => {
         return {id, ...data};
       });
 
-      // Filter out the current user from the fetched users list
       const filteredUsers = userData.filter(user => user.id !== currentUserId);
 
       setUsers(filteredUsers);
@@ -48,10 +46,7 @@ const SearchUsers = ({navigation}) => {
         style={styles.userContainer}
         onPress={() => {
           if (item.id) {
-            // console.log('Navigating to Profile with uid:', item.id);
             navigation.navigate('HomeProfile', {uid: item.id});
-          } else {
-            console.log('Item ID is undefined:', item);
           }
         }}>
         <Text style={styles.userName}>{item.name}</Text>
@@ -90,10 +85,10 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#d3d3d35b',
-    borderColor: '#ccc',
-    borderRadius: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 25,
     marginHorizontal: 20,
     marginBottom: 10,
   },
@@ -106,7 +101,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   userContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#fff',
     borderRadius: 15,
     marginVertical: 8,
     padding: 15,

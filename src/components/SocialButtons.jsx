@@ -8,7 +8,7 @@ const SocialButtons = ({label, backgroundColor, ...props}) => {
         <Text style={style.buttonText}>Sign Up With Google</Text>
       </TouchableOpacity>
       <TouchableOpacity {...props} style={style.FaceBookbutton}>
-        <Text style={style.buttonText}>Sign Up With Google</Text>
+        <Text style={style.buttonText}>Sign Up With Facebook</Text>
       </TouchableOpacity>
     </View>
   );

@@ -24,7 +24,6 @@ const Profile = ({currentUser, posts, route, navigation, following}) => {
           const userData = userSnapshot.data();
           setUser(userData);
         } else {
-          console.log('User Does Not Exist');
           // Handle scenario where the user doesn't exist in Firestore
         }
 
@@ -47,13 +46,9 @@ const Profile = ({currentUser, posts, route, navigation, following}) => {
       const updatedFollowing = following || [];
       const targetUid = route.params.uid;
 
-      console.log('Updated Following:', updatedFollowing);
-      console.log('Target UID:', targetUid);
-
       // Extract "id" property for comparison
       const isFollowing = updatedFollowing.some(user => user.id === targetUid);
 
-      console.log('Is Following:', isFollowing);
       setIsFollowing(isFollowing);
     };
 
@@ -76,7 +71,6 @@ const Profile = ({currentUser, posts, route, navigation, following}) => {
           .set({});
 
         // setIsFollowing(true);
-        console.log('User Followed');
       } else {
         console.warn('User not authenticated.');
       }
@@ -102,7 +96,6 @@ const Profile = ({currentUser, posts, route, navigation, following}) => {
           .delete();
 
         // setIsFollowing(false);
-        console.log('User Unfollowed');
       } else {
         console.warn('User not authenticated.');
       }

@@ -19,6 +19,7 @@ import {
   ImagePickerResponse,
 } from 'react-native-image-picker';
 import {firebase} from '@react-native-firebase/auth';
+import HomeContainer from '../../container/HomeContainer';
 
 const Post = ({navigation}) => {
   const [image, setImage] = useState(null);
@@ -34,11 +35,6 @@ const Post = ({navigation}) => {
         setImage(selectedImage.uri);
       }
     }
-  };
-  const generateUniqueFileName = () => {
-    const randomString = Math.random().toString(36).substring(7);
-    const timestamp = new Date().getTime();
-    return `${randomString}_${timestamp}.jpg`;
   };
 
   const handleImagePicker = () => {
@@ -57,6 +53,7 @@ const Post = ({navigation}) => {
     };
     launchCamera(options, handleImageSelection);
   };
+
   const uploadImageToFirebase = async () => {
     try {
       if (image) {
@@ -83,7 +80,6 @@ const Post = ({navigation}) => {
 
         // Get the download URL from the snapshot
         const downloadURL = await imageRef.getDownloadURL();
-        console.log('Image uploaded. Download URL:', downloadURL);
 
         savePostData(downloadURL); // Pass the downloadURL to savePostData function
       } else {
@@ -95,6 +91,7 @@ const Post = ({navigation}) => {
       setUploading(false);
     }
   };
+
   const savePostData = async downloadUrl => {
     try {
       const currentUser = firebase.auth().currentUser;
@@ -103,7 +100,7 @@ const Post = ({navigation}) => {
         await firebase
           .firestore()
           .collection('Posts')
-          .doc(uid) // Use the user's UID directly
+          .doc(uid)
           .collection('Uploads')
           .add({
             creation: firebase.firestore.FieldValue.serverTimestamp(),
@@ -124,57 +121,74 @@ const Post = ({navigation}) => {
   };
 
   return (
-    <Container>
-      {image && <Image source={{uri: image}} style={styles.selectedImage} />}
-      <TextInput
-        placeholder="What's On Your Mind? "
-        multiline
-        style={styles.text}
-        onChangeText={text => setCaption(text)}
-      />
-      <StyledButton label="POST" onPress={uploadImageToFirebase} />
-      <ActionButton>
+    <HomeContainer>
+      <View style={styles.container}>
+        <View style={styles.imageContainer}>
+          {image && (
+            <Image source={{uri: image}} style={styles.selectedImage} />
+          )}
+        </View>
+        <TextInput
+          placeholder="What's On Your Mind? "
+          multiline
+          style={styles.text}
+          onChangeText={text => setCaption(text)}
+        />
+        <StyledButton label="POST" onPress={uploadImageToFirebase} />
+      </View>
+
+      <ActionButton buttonColor="#2e64e5">
         <ActionButton.Item
           title="Take Picture from Camera"
-          onPress={handleCameraPicker}>
+          onPress={handleCameraPicker}
+          buttonColor="#3498db">
           <Icon name="camera" style={styles.actionButtonIcon} />
         </ActionButton.Item>
         <ActionButton.Item
           title="Upload from Gallery"
-          onPress={handleImagePicker}>
-          <Icon name="browse-gallery" style={styles.actionButtonIcon} />
+          onPress={handleImagePicker}
+          buttonColor="#1abc9c">
+          <Icon name="image" style={styles.actionButtonIcon} />
         </ActionButton.Item>
       </ActionButton>
+
       <Modal visible={uploading} transparent={true} animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text>Uploading...</Text>
-            <ActivityIndicator size="large" color="#0000ff" />
-            <Text>{uploadProgress}%</Text>
+            <ActivityIndicator size="large" color="#2e64e5" />
+            <Text style={styles.progressText}>{uploadProgress}%</Text>
           </View>
         </View>
       </Modal>
-    </Container>
+    </HomeContainer>
   );
 };
 
-export default Post;
-
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+  imageContainer: {
+    marginBottom: 20,
+  },
+  selectedImage: {
+    width: 300,
+    height: 300,
+    borderRadius: 10,
+    resizeMode: 'cover',
+    marginBottom: 16,
+  },
   text: {
-    fontSize: 32,
-    marginHorizontal: 25,
-    paddingBottom: 10,
+    fontSize: 18,
+    textAlign: 'center',
+    marginBottom: 16,
   },
   actionButtonIcon: {
     fontSize: 25,
     color: 'white',
-  },
-  selectedImage: {
-    width: 400,
-    height: 400,
-    resizeMode: 'cover',
-    marginBottom: 3,
   },
   modalContainer: {
     flex: 1,
@@ -188,4 +202,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
   },
+  progressText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#2e64e5',
+  },
 });
+
+const generateUniqueFileName = () => {
+  const randomString = Math.random().toString(36).substring(7);
+  const timestamp = new Date();
+  timestamp.setMilliseconds(0); // Remove seconds and milliseconds
+  return `${randomString}_${timestamp.toISOString()}.jpg`;
+};
+
+export default Post;

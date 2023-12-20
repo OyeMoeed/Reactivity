@@ -3,7 +3,7 @@ import React from 'react';
 
 const PostText = ({children}) => {
   return (
-    <View>
+    <View style={{paddingVertical: 10}}>
       <Text>{children}</Text>
     </View>
   );

@@ -7,18 +7,44 @@ import ResetPassword from '../screens/Auth/ResetPassword';
 
 const Stack = createStackNavigator();
 
-function AuthStack() {
+const AuthStack = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen component={Login} options={{title: ''}} name="Login" />
-      <Stack.Screen component={Signup} options={{title: ''}} name="Signup" />
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#2e64e5', // Set the background color
+        },
+        headerTintColor: '#fff', // Set the text color
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}>
+      <Stack.Screen
+        component={Login}
+        options={{
+          title: '',
+          headerTransparent: true, // Make the header transparent
+        }}
+        name="Login"
+      />
+      <Stack.Screen
+        component={Signup}
+        options={{
+          title: '',
+          headerTransparent: true, // Make the header transparent
+        }}
+        name="Signup"
+      />
       <Stack.Screen
         component={ResetPassword}
-        options={{title: ''}}
+        options={{
+          title: '',
+          headerTransparent: true, // Make the header transparent
+        }}
         name="ResetPassword"
       />
     </Stack.Navigator>
   );
-}
+};
 
 export default AuthStack;
