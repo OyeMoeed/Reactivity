@@ -13,11 +13,15 @@ import ChatScreen from '../screens/Home/ChatScreen';
 import SearchUsers from '../screens/Home/SearchUsers';
 import UserProfile from '../screens/Home/UserProfile';
 import PostScreen from '../screens/Home/PostScreen';
+import CommentScreen from '../screens/Home/CommentScreen';
+import {useNavigation} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export function FeedStack() {
+  const navigation = useNavigation();
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -33,13 +37,13 @@ export function FeedStack() {
             shadowColor: '#fff',
             elevation: 0,
           },
-          headerRight: ({navigation}) => (
+          headerRight: () => (
             <View style={{marginRight: 10}}>
               <Icon
                 name="paper-plane-outline"
                 size={22}
                 color="#2e64e5"
-                onPress={() => navigation.replace('Messages')}
+                onPress={() => navigation.navigate('Chat')}
               />
             </View>
           ),
@@ -59,6 +63,13 @@ export function FeedStack() {
         options={{
           headerBackTitleVisible: false,
           headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Comments"
+        component={CommentScreen}
+        options={{
+          headerBackTitleVisible: false,
         }}
       />
     </Stack.Navigator>

@@ -3,6 +3,7 @@ import React from 'react';
 import Messages from './Messages';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useNavigation} from '@react-navigation/native';
 
 const MessageData = [
   {
@@ -50,21 +51,34 @@ const MessageData = [
 ];
 
 const ChatScreen = () => {
+  const navigation = useNavigation(); // Add navigation hook
+
   return (
-    <View style={style.flex}>
+    <View style={styles.flex}>
       <FlatList
         data={MessageData}
-        renderItem={({item}) => <Messages item={item} />}
+        renderItem={({item}) => (
+          <Messages item={item} navigation={navigation} />
+        )} // Pass navigation prop
         keyExtractor={item => item.id}
       />
-      <ActionButton>
-        <ActionButton.Item title="Start a new Chat" onPress={() => {}}>
-          <Icon name="message" style={style.actionButtonIcon} />
-        </ActionButton.Item>
-      </ActionButton>
+      {/* Your other components */}
     </View>
   );
 };
+
+const styles = {
+  flex: {
+    flex: 1,
+  },
+  actionButtonIcon: {
+    fontSize: 20,
+    height: 22,
+    color: 'white',
+  },
+};
+
+export default ChatScreen;
 
 export default ChatScreen;
 const style = {

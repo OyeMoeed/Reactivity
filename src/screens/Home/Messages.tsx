@@ -5,17 +5,27 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import UserInfotab from '../../components/UserInfotab';
 import ChatCard from '../../components/ChatCard';
 import avatar from '../../assets/avatar.png';
-import {Text} from 'react-native';
+import {Text, Touchable} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
 
-const Messages = ({item, navigation}) => {
+const Messages = ({item, route}) => {
+  const navigation = useNavigation();
   return (
     <HomeContainer>
       <ChatCard>
-        <UserInfotab source={avatar}>{item.name}</UserInfotab>
-        <Text numberOfLines={1}>{item.post}</Text>
-        <Text style={{paddingTop: 10, fontSize: 12, color: '#777777'}}>
-          {item.postTime}
-        </Text>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('Chat', {
+              title: item.name,
+            })
+          }>
+          <UserInfotab>{item.name}</UserInfotab>
+          <Text numberOfLines={1}>{item.post}</Text>
+          <Text style={{paddingTop: 10, fontSize: 12, color: '#777777'}}>
+            {item.postTime}
+          </Text>
+        </TouchableOpacity>
       </ChatCard>
     </HomeContainer>
   );

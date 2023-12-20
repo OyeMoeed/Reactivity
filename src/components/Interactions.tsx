@@ -1,12 +1,16 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
-const Interactions = () => {
+import {useNavigation} from '@react-navigation/native';
+const Interactions = ({Comment}) => {
+
   return (
     <View style={style.row}>
       <Icon name="heart" size={15} />
-      <Ionicon name="chatbox-outline" size={15} />
+      <TouchableOpacity onPress={Comment}>
+        <Ionicon name="chatbox-outline" size={15} />
+      </TouchableOpacity>
     </View>
   );
 };

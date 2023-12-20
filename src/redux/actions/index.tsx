@@ -85,7 +85,7 @@ export function fetchUserfollowing() {
   };
 }
 
-export function fetchUsersData(uid) {
+export function fetchUsersData(uid, getPosts) {
   return (dispatch, getState) => {
     const found = getState().usersState.users.some(el => el.uid === uid);
     console.log('UID FOUND', uid);
@@ -108,7 +108,9 @@ export function fetchUsersData(uid) {
           console.error('Error fetching user data:', error);
         });
     } else {
-      dispatch(fetchUsersFollowingData(uid)); // If user data is already present, just fetch following data
+      if (getPosts) {
+        dispatch(fetchUsersFollowingData(uid)); // If user data is already present, just fetch following data
+      }
     }
   };
 }

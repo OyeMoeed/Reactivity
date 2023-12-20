@@ -20,6 +20,7 @@ import {
 } from 'react-native-image-picker';
 import {firebase} from '@react-native-firebase/auth';
 import HomeContainer from '../../container/HomeContainer';
+import {formatISO} from 'date-fns';
 
 const Post = ({navigation}) => {
   const [image, setImage] = useState(null);
@@ -95,15 +96,20 @@ const Post = ({navigation}) => {
   const savePostData = async downloadUrl => {
     try {
       const currentUser = firebase.auth().currentUser;
+
       if (currentUser) {
         const {uid} = currentUser;
+
+        // Get the current date and time using date-fns
+        const creationDate = formatISO(new Date());
+
         await firebase
           .firestore()
           .collection('Posts')
           .doc(uid)
           .collection('Uploads')
           .add({
-            creation: firebase.firestore.FieldValue.serverTimestamp(),
+            creation: creationDate, // Use the formatted date instead of serverTimestamp()
             downloadUrl,
             caption,
           });

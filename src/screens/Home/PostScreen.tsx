@@ -7,12 +7,14 @@ import UserInfotab from '../../components/UserInfotab';
 import PostText from '../../components/PostText';
 import PostImage from '../../components/PostImage';
 import Interactions from '../../components/Interactions';
+import {useNavigation} from '@react-navigation/native';
 
-const PostScreen = ({following, usersLoaded, users, currentUser}) => {
+const PostScreen = ({following, usersFollowingLoaded, users, currentUser}) => {
+  const navigation = useNavigation();
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     let posts = [];
-    if (usersLoaded === following.length) {
+    if (usersFollowingLoaded === following.length) {
       console.log('Followeing Users', following.length);
       for (let i = 0; i < following.length; i++) {
         const uidInFollowing = following[i].id;
@@ -27,7 +29,7 @@ const PostScreen = ({following, usersLoaded, users, currentUser}) => {
             ...posts,
             ...user.posts.map(post => ({
               ...post,
-              creation: post.creation.toDate().toString(),
+              creation: post.creation.toString(),
             })),
           ];
           console.log(posts, 'Posts');
@@ -40,7 +42,7 @@ const PostScreen = ({following, usersLoaded, users, currentUser}) => {
       });
       setPosts(posts);
     }
-  }, [usersLoaded]);
+  }, [usersFollowingLoaded]);
 
   const renderItem = ({item}) => (
     <Card>
@@ -50,7 +52,11 @@ const PostScreen = ({following, usersLoaded, users, currentUser}) => {
       <Text style={{fontSize: 10, paddingBottom: 10, color: '#808080'}}>
         {item.creation}
       </Text>
-      <Interactions />
+      <Interactions
+        Comment={() =>
+          navigation.navigate('Comments', {postId: item.id, uid: item.user})
+        }
+      />
     </Card>
   );
 
@@ -96,7 +102,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = store => ({
   following: store.userState.following,
   users: store.usersState.users,
-  usersLoaded: store.usersState.usersLoaded,
+  usersFollowingLoaded: store.usersState.usersFollowingLoaded,
   currentUser: store.userState.currentUser,
 });
 
