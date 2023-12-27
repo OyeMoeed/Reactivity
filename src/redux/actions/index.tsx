@@ -4,6 +4,7 @@ import {
   USER_STATE_CHANGE,
   USER_FOLLOWING_STATE_CHANGE,
   USERS_DATA_STATE_CHANGE,
+  USERS_DATA_LIKE_CHANGE,
   USERS_POST_STATE_CHANGE,
 } from '../constants';
 
@@ -40,7 +41,7 @@ export function fetchUserPosts() {
       .collection('Posts')
       .doc(firebase.auth().currentUser?.uid)
       .collection('Uploads')
-      .orderBy('creation', 'desc')
+      .orderBy('creation', 'asc')
       .get()
       .then(snapshot => {
         let posts = snapshot.docs.map(doc => {
@@ -124,35 +125,69 @@ export function fetchUsersFollowingData(uid) {
       .orderBy('creation', 'asc')
       .get()
       .then(snapshot => {
-        if (snapshot.docs.length > 0) {
-          const uidFromSnapshot = snapshot.docs[0].ref.path.split('/')[1];
-          let user = getState().usersState.users.find(
-            el => el.uid === uidFromSnapshot,
-          );
-          console.log('ALALALAL', uidFromSnapshot);
+        const uidFromSnapshot = uid; // Assuming uid is the correct user ID
+        let user = getState().usersState.users.find(
+          el => el.uid === uidFromSnapshot,
+        );
 
+        if (snapshot.docs.length > 0) {
           let posts = snapshot.docs.map(doc => {
             const data = doc.data();
             const id = doc.id;
             return {id, ...data, user};
           });
-          console.log('posts=>>>>>>>>>>>>>>', posts);
+
+          for (let i = 0; i < posts.length; i++) {
+            dispatch(fetchUsersFollowingLikes(uid, posts[i].id));
+          }
+
           dispatch({
             type: USERS_POST_STATE_CHANGE,
             posts,
             uid: uidFromSnapshot,
           });
-          console.log('Dispatched');
-          console.log(getState());
         } else {
+          // If there are no documents, dispatch an action with an empty array
+          dispatch({
+            type: USERS_POST_STATE_CHANGE,
+            posts: [],
+            uid: uidFromSnapshot,
+          });
+
           console.warn('No documents found in the snapshot for UID:', uid);
-          // Handle the case where no documents are found, if needed
-          // For example, you might dispatch an action to update the state with a specific flag
+          // Optionally, you can handle the case where no documents are found here
           // dispatch({ type: NO_DOCUMENTS_FOUND_ACTION, uid });
         }
       })
       .catch(error => {
         console.error('Error fetching users following data:', error);
+      });
+  };
+}
+
+export function fetchUsersFollowingLikes(uid, postId) {
+  return (dispatch, getState) => {
+    firebase
+      .firestore()
+      .collection('Posts')
+      .doc(uid)
+      .collection('Uploads')
+      .doc(postId)
+      .collection('Likes')
+      .doc(firebase.auth().currentUser?.uid)
+      .onSnapshot(snapshot => {
+        const postId = snapshot?.ZE?.path?.segments[3];
+
+        let currentUserLikes = false;
+        if (snapshot.exists) {
+          currentUserLikes = true;
+        }
+
+        dispatch({
+          type: USERS_DATA_LIKE_CHANGE,
+          postId,
+          currentUserLikes,
+        });
       });
   };
 }

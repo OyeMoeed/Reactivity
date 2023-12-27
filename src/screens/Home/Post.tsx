@@ -100,7 +100,6 @@ const Post = ({navigation}) => {
       if (currentUser) {
         const {uid} = currentUser;
 
-        // Get the current date and time using date-fns
         const creationDate = formatISO(new Date());
 
         await firebase
@@ -109,7 +108,7 @@ const Post = ({navigation}) => {
           .doc(uid)
           .collection('Uploads')
           .add({
-            creation: creationDate, // Use the formatted date instead of serverTimestamp()
+            creation: creationDate,
             downloadUrl,
             caption,
           });

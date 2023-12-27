@@ -1,14 +1,11 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
 
-const SocialButtons = ({label, backgroundColor, ...props}) => {
+const SocialButtons = ({label, onPress, backgroundColor, ...props}) => {
   return (
     <View style={style.socialButtonView}>
-      <TouchableOpacity {...props} style={style.Googlebutton}>
+      <TouchableOpacity {...props} style={style.Googlebutton} onPress={onPress}>
         <Text style={style.buttonText}>Sign Up With Google</Text>
-      </TouchableOpacity>
-      <TouchableOpacity {...props} style={style.FaceBookbutton}>
-        <Text style={style.buttonText}>Sign Up With Facebook</Text>
       </TouchableOpacity>
     </View>
   );

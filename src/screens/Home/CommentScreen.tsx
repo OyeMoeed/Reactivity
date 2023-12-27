@@ -1,40 +1,40 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TextInput, FlatList} from 'react-native';
-import Card from '../../components/Card'; // Make sure to import your Card component
+import Card from '../../components/Card';
 import {firebase} from '@react-native-firebase/firestore';
 import StyledButton from '../../components/StyledButton';
 import {fetchUsersData} from '../../redux/actions';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import PostText from '../../components/PostText';
 
-const CommentScreen = ({route, props, users}) => {
+const CommentScreen = ({route, users, fetchUsersData}) => {
   const [comments, setComments] = useState([]);
   const [postId, setPostId] = useState('');
   const [text, setText] = useState('');
-  const {uid} = route.params;
 
   useEffect(() => {
     function matchUsersToComments(comments) {
-      for (let i = 0; i < comments.length; i++) {
+      for (let i = 0; i > comments.length; i++) {
+        console.log('Comments ', comments.length);
         if (comments[i].hasOwnProperty('user')) {
           continue;
         }
         const user = users.find(x => x.uid === comments[i].creator);
-        if (user == undefined) {
-          props.fetchUsersData(comments[i].creator, false);
+        if (user === undefined) {
+          fetchUsersData(comments[i].creator, false);
         } else {
           comments[i].user = user;
         }
       }
       setComments(comments);
     }
-    console.log(uid.uid);
 
     if (route.params.postId !== postId) {
       firebase
         .firestore()
         .collection('Posts')
-        .doc(uid.uid)
+        .doc(route.params.uid.uid) // Assuming you want to use the uid from the route params
         .collection('Uploads')
         .doc(route.params.postId)
         .collection('Comments')
@@ -45,62 +45,63 @@ const CommentScreen = ({route, props, users}) => {
             const id = doc.id;
             return {id, ...data};
           });
-          console.log('id', id);
           matchUsersToComments(comments);
         });
       setPostId(route.params.postId);
     } else {
       matchUsersToComments(comments);
     }
-  }, [route.params.postId, users]);
+  }, [route.params.postId, users, fetchUsersData]);
 
-  const onCommentSend = () => {
+  const onCommentSend = async () => {
     const {uid} = route.params;
-    console.warn('Post Id', route.params.postId);
-    firebase
-      .firestore()
-      .collection('Posts')
-      .doc(uid.uid)
-      .collection('Uploads')
-      .doc(route.params.postId)
-      .collection('Comments')
-      .add({
-        creator: firebase.auth().currentUser?.uid,
-        text,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      });
+    const newComment = {
+      creator: firebase.auth().currentUser?.uid,
+      text,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+
+    try {
+      // Add the new comment to Firestore
+      const docRef = await firebase
+        .firestore()
+        .collection('Posts')
+        .doc(uid.uid)
+        .collection('Uploads')
+        .doc(route.params.postId)
+        .collection('Comments')
+        .add(newComment);
+
+      // Update local state with the new comment
+      setComments([...comments, {id: docRef.id, ...newComment}]);
+
+      // Clear the input field
+      setText('');
+    } catch (error) {
+      console.error('Error adding comment: ', error);
+    }
   };
   return (
     <View style={styles.container}>
-      <Card>
-        <FlatList
-          data={comments}
-          renderItem={({item}) => {
-            console.warn('Lalalallalal', item.name); // Log the name property
-            return (
-              <View
-                style={{
-                  borderBottomColor: 'black',
-                  borderBottomWidth: 1,
-                  marginBottom: 10,
-                }}>
-                {item.user !== undefined ? <Text>{item.user}</Text> : null}
-                <Text>{item.text}</Text>
-              </View>
-            );
-          }}
-        />
-        <TextInput
-          style={styles.commentInput}
-          placeholder="Add a comment..."
-          onChangeText={text => setText(text)}
-        />
-        <StyledButton
-          label={'Submit'}
-          style={styles.submitButton}
-          onPress={onCommentSend}
-        />
-      </Card>
+      <FlatList
+        data={comments}
+        renderItem={({item}) => (
+          <Card>
+            <PostText>{item.text}</PostText>
+          </Card>
+        )}
+      />
+      <TextInput
+        style={styles.commentInput}
+        value={text}
+        placeholder="Add a comment..."
+        onChangeText={text => setText(text)}
+      />
+      <StyledButton
+        label={'Submit'}
+        style={styles.submitButton}
+        onPress={onCommentSend}
+      />
     </View>
   );
 };
@@ -109,9 +110,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     paddingVertical: 50,
     width: '100%',
+  },
+  commentContainer: {
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    marginBottom: 10,
   },
   commentInput: {
     borderWidth: 1,
@@ -125,10 +130,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginHorizontal: 50,
-  },
-  submitButtonText: {
-    color: 'white',
-    textAlign: 'center',
   },
 });
 

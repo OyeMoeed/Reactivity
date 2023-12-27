@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {AuthProvider} from '../firebase/AuthProvider';
-import Routes from './Routex';
+import Routes from './Routes';
 import {bindActionCreators} from 'redux';
 import {fetchUser, fetchUserPosts, fetchUserfollowing} from '../redux/actions';
 import {connect} from 'react-redux';

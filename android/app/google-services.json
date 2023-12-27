@@ -12,7 +12,20 @@
           "package_name": "com.reactivity"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "356905384961-68o3onpdb01it7eauq9tfbnh83o9fki4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.reactivity",
+            "certificate_hash": "264f17e8e15910d49547653a2879f9cb9fd466d2"
+          }
+        },
+        {
+          "client_id": "356905384961-jbvm7j92m02ql84o4mpabuuq8s9a22qe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDcj5F3CvWyZ7X-R1a01gKV7rEXP1P9Ev4"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "356905384961-jbvm7j92m02ql84o4mpabuuq8s9a22qe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "356905384961-d776bvfhocu81hu0qbl4eqlo8ii6ejmg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.Reactivity"
+              }
+            }
+          ]
         }
       }
     }

@@ -14,17 +14,7 @@ export default Card;
 const style = StyleSheet.create({
   card: {
     backgroundColor: '#F5F5F5',
-    borderRadius: 20,
-
     marginVertical: 10,
-    padding: 15,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 3.84,
-    elevation: 5,
+    paddingVertical: 15,
   },
 });

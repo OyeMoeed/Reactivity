@@ -5,6 +5,8 @@ import {connect} from 'react-redux';
 import {firebase} from '@react-native-firebase/auth';
 import StyledButton from '../../components/StyledButton';
 import Icons from 'react-native-vector-icons/Ionicons';
+import Avatar from '../../assets/avatar.png';
+import FastImage from 'react-native-fast-image';
 
 const Profile = ({currentUser, posts, route, navigation, following}) => {
   const [userPosts, setUserPosts] = useState([]);
@@ -120,6 +122,7 @@ const Profile = ({currentUser, posts, route, navigation, following}) => {
   return (
     <ProfileContainer>
       <View style={styles.userInfo}>
+        <Image source={Avatar} style={styles.profileImage} />
         <Text style={styles.username}>{user ? user.name : 'Loading...'}</Text>
       </View>
 
@@ -131,7 +134,11 @@ const Profile = ({currentUser, posts, route, navigation, following}) => {
           data={userPosts}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => (
-            <Image source={{uri: item.downloadUrl}} style={styles.postImage} />
+            <FastImage
+              source={{uri: item.downloadUrl}}
+              style={styles.postImage}
+              resizeMode={FastImage.resizeMode.cover}
+            />
           )}
           contentContainerStyle={styles.postList}
         />

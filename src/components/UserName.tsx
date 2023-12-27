@@ -4,7 +4,7 @@ import React from 'react';
 const UserName = ({children}) => {
   return (
     <View style={style.userNametab}>
-      <Text>{children}</Text>
+      <Text style={{fontSize: 12}}>{children}</Text>
     </View>
   );
 };
@@ -12,6 +12,6 @@ const UserName = ({children}) => {
 export default UserName;
 const style = StyleSheet.create({
   userNametab: {
-    paddingLeft: 20,
+    paddingLeft: 10,
   },
 });

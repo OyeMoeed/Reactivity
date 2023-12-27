@@ -15,7 +15,7 @@ const style = StyleSheet.create({
   bg: {
     flex: 1,
     alignItems: 'center',
-    height: '100%',
+    minWidth: '100%',
     backgroundColor: 'white',
   },
 });

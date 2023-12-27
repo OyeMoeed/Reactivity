@@ -5,6 +5,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {firebase} from '@react-native-firebase/auth';
 import {AuthContext} from '../firebase/AuthProvider';
+import {useNavigation} from '@react-navigation/native';
 
 import Post from '../screens/Home/Post';
 import Profile from '../screens/Home/Profile';
@@ -14,12 +15,11 @@ import SearchUsers from '../screens/Home/SearchUsers';
 import UserProfile from '../screens/Home/UserProfile';
 import PostScreen from '../screens/Home/PostScreen';
 import CommentScreen from '../screens/Home/CommentScreen';
-import {useNavigation} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-export function FeedStack() {
+const FeedStack = () => {
   const navigation = useNavigation();
 
   return (
@@ -43,7 +43,7 @@ export function FeedStack() {
                 name="paper-plane-outline"
                 size={22}
                 color="#2e64e5"
-                onPress={() => navigation.navigate('Chat')}
+                onPress={() => navigation.navigate('Messages')}
               />
             </View>
           ),
@@ -52,17 +52,16 @@ export function FeedStack() {
       <Stack.Screen
         name="Chat"
         component={ChatScreen}
-        options={{
+        options={({route}) => ({
+          title: route.params?.name || 'Chat', // Set the title dynamically
           headerBackTitleVisible: false,
-          headerShown: false,
-        }}
+        })}
       />
       <Stack.Screen
         name="Messages"
         component={Messages}
         options={{
           headerBackTitleVisible: false,
-          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -74,17 +73,11 @@ export function FeedStack() {
       />
     </Stack.Navigator>
   );
-}
+};
 
-export function PostStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen component={Post} name="Post" />
-    </Stack.Navigator>
-  );
-}
+const SearchStack = () => {
+  const navigation = useNavigation();
 
-export function SearchStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -108,13 +101,15 @@ export function SearchStack() {
           },
           headerBackTitleVisible: false,
           uid: route.params?.uid,
-          headerRight: ({navigation}) => (
+          headerRight: () => (
             <View style={{marginRight: 10}}>
               <Icon
                 name="chatbox-outline"
                 size={22}
                 color="#2e64e5"
-                onPress={() => navigation.navigate('Chat')}
+                onPress={() =>
+                  navigation.navigate('Chat', {uid: route.params?.uid})
+                }
               />
             </View>
           ),
@@ -122,9 +117,9 @@ export function SearchStack() {
       />
     </Stack.Navigator>
   );
-}
+};
 
-export function ProfileStack(route) {
+const ProfileStack = ({route}) => {
   const {uid} = route.params || {};
 
   return (
@@ -139,7 +134,7 @@ export function ProfileStack(route) {
       />
     </Stack.Navigator>
   );
-}
+};
 
 const AppStack = () => {
   const currentUserUID = firebase.auth().currentUser?.uid;
@@ -163,7 +158,7 @@ const AppStack = () => {
       />
       <Tab.Screen
         name="AddPost"
-        component={PostStack}
+        component={Post}
         options={{
           tabBarShowLabel: false,
           headerShown: false,
@@ -190,7 +185,6 @@ const AppStack = () => {
         options={{
           tabBarShowLabel: false,
           headerTitle: '',
-
           tabBarIcon: ({color, size}) => (
             <Icon name="person-outline" color={color} size={size} />
           ),

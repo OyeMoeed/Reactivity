@@ -21,7 +21,7 @@ const Login = ({navigation}) => {
     formState: {errors},
     handleSubmit,
   } = useForm();
-  const {login} = useContext(AuthContext);
+  const {login, useGoogleLogin} = useContext(AuthContext);
 
   const onSubmit = data => {
     login(data.loginEmail, data.loginPassword);
@@ -57,7 +57,7 @@ const Login = ({navigation}) => {
           </TouchableOpacity>
         </View>
 
-        <SocialButtons />
+        <SocialButtons onPress={() => useGoogleLogin} />
 
         <View style={styles.text}>
           <Text style={styles.signupText}>Need An Account?</Text>
