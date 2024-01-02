@@ -9,6 +9,7 @@ import PostImage from '../../components/PostImage';
 import Interactions from '../../components/Interactions';
 import {useNavigation} from '@react-navigation/native';
 import {firebase} from '@react-native-firebase/auth';
+import Avatar from '../../assets/avatar.png';
 
 const PostScreen = ({following, usersLoaded, users, feed}) => {
   const navigation = useNavigation();
@@ -37,7 +38,7 @@ const PostScreen = ({following, usersLoaded, users, feed}) => {
       .doc(firebase.auth().currentUser?.uid)
       .set({});
 
-    setIsLiked(true);
+    // setIsLiked(true);
   };
 
   const onDislike = ({postId, userId}) => {
@@ -51,12 +52,14 @@ const PostScreen = ({following, usersLoaded, users, feed}) => {
       .doc(firebase.auth().currentUser?.uid)
       .delete();
 
-    setIsLiked(false);
+    // setIsLiked(false);
   };
 
   const renderItem = ({item}) => (
     <Card>
-      <UserInfotab>{item.user.name}</UserInfotab>
+      <UserInfotab source={{uri: item.user.avatarURL}}>
+        {item.user.name}
+      </UserInfotab>
       <PostImage source={{uri: item.downloadUrl}} />
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Text

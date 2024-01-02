@@ -10,7 +10,6 @@ import {
 import ProfileContainer from '../../container/ProfileContainer';
 import Icons from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
-import Avatar from '../../assets/avatar.png';
 import FastImage from 'react-native-fast-image';
 
 const UserProfile = ({currentUser, posts, following}) => {
@@ -18,7 +17,11 @@ const UserProfile = ({currentUser, posts, following}) => {
     <ProfileContainer>
       <View style={styles.userInfo}>
         <TouchableOpacity style={styles.profileImageContainer}>
-          <Image source={Avatar} style={styles.profileImage} />
+          <FastImage
+            source={{uri: currentUser.avatarURL}}
+            // source={Avatar}
+            style={styles.profileImage}
+          />
           <Text style={styles.editProfileText}>Edit Profile Picture</Text>
         </TouchableOpacity>
         <Text style={styles.username}>

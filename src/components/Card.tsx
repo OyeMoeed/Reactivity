@@ -14,7 +14,7 @@ export default Card;
 const style = StyleSheet.create({
   card: {
     backgroundColor: '#F5F5F5',
-    marginVertical: 10,
+    marginVertical: 5,
     paddingVertical: 15,
   },
 });

@@ -7,6 +7,7 @@ import {fetchUsersData} from '../../redux/actions';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import PostText from '../../components/PostText';
+import UserInfotab from '../../components/UserInfotab';
 
 const CommentScreen = ({route, users, fetchUsersData}) => {
   const [comments, setComments] = useState([]);
@@ -86,9 +87,16 @@ const CommentScreen = ({route, users, fetchUsersData}) => {
       <FlatList
         data={comments}
         renderItem={({item}) => (
-          <Card>
+          <View
+            style={{
+              borderBottomWidth: 0.25,
+              marginHorizontal: 15,
+              borderColor: '#808080',
+              marginBottom: 5,
+            }}>
+            <UserInfotab>Name</UserInfotab>
             <PostText>{item.text}</PostText>
-          </Card>
+          </View>
         )}
       />
       <TextInput
@@ -116,12 +124,13 @@ const styles = StyleSheet.create({
   commentContainer: {
     borderBottomColor: 'black',
     borderBottomWidth: 1,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   commentInput: {
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 5,
+    marginHorizontal: '5%',
     padding: 8,
     marginBottom: 10,
   },

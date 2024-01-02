@@ -122,7 +122,10 @@ const Profile = ({currentUser, posts, route, navigation, following}) => {
   return (
     <ProfileContainer>
       <View style={styles.userInfo}>
-        <Image source={Avatar} style={styles.profileImage} />
+        <FastImage
+          source={{uri: user?.avatarURL}}
+          style={styles.profileImage}
+        />
         <Text style={styles.username}>{user ? user.name : 'Loading...'}</Text>
       </View>
 

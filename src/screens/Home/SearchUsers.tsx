@@ -10,6 +10,7 @@ import {
 import ProfileContainer from '../../container/ProfileContainer';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {firebase} from '@react-native-firebase/auth';
+import UserInfotab from '../../components/UserInfotab';
 
 const SearchUsers = ({navigation}) => {
   const [searchInput, setSearchInput] = useState('');
@@ -49,7 +50,7 @@ const SearchUsers = ({navigation}) => {
             navigation.navigate('HomeProfile', {uid: item.id});
           }
         }}>
-        <Text style={styles.userName}>{item.name}</Text>
+        <UserInfotab source={{uri: item.avatarURL}}>{item.name}</UserInfotab>
       </TouchableOpacity>
     );
   };
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 15,
     marginVertical: 8,
-    padding: 15,
+    padding: 4,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

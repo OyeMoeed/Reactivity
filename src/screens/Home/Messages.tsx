@@ -51,8 +51,7 @@ const Messages = ({navigation}) => {
             navigation.navigate('Chat', {uid: item.id});
           }
         }}>
-        <UserInfotab>{item.name}</UserInfotab>
-        <PostText />
+        <UserInfotab source={{uri: item.avatarURL}}>{item.name}</UserInfotab>
       </ChatCard>
     );
   };

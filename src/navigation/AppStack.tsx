@@ -25,7 +25,7 @@ const FeedStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="RN Social"
+        name="Reactivity"
         component={PostScreen}
         options={{
           headerTitleAlign: 'center',

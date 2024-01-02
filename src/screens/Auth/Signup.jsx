@@ -1,6 +1,14 @@
-import React, {useContext} from 'react';
-import {View, Text, StyleSheet, ImageBackground} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import {useForm} from 'react-hook-form';
+import {launchImageLibrary} from 'react-native-image-picker';
 import AuthContainer from '../../container/AuthContainer';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
@@ -16,9 +24,38 @@ const Signup = ({navigation}) => {
 
   const {signup} = useContext(AuthContext);
 
-  const onSubmit = data => {
+  const [avatarSource, setAvatarSource] = useState(null);
+
+  const onSubmit = async data => {
     const {name, email, password} = data;
-    signup(name, email, password);
+
+    try {
+      if (avatarSource && avatarSource.uri) {
+        await signup(name, email, password, avatarSource);
+      } else {
+        throw new Error('Avatar source is undefined or does not have a URI.');
+      }
+    } catch (error) {
+      console.error('Error during sign up:', error.message);
+      alert('Sign Up Unsuccessful');
+    }
+  };
+
+  const handleImageSelection = (response: ImagePickerResponse) => {
+    if (!response.didCancel && response.assets && response.assets.length > 0) {
+      const selectedImage = response.assets[0];
+      if (selectedImage.uri) {
+        setAvatarSource({uri: selectedImage.uri});
+      }
+    }
+  };
+
+  const handleImagePicker = () => {
+    let options = {
+      mediaType: 'photo',
+      quality: 0.5,
+    };
+    launchImageLibrary(options, handleImageSelection);
   };
 
   return (
@@ -59,6 +96,15 @@ const Signup = ({navigation}) => {
             placeholder="* * * * * * *"
             secureTextEntry
           />
+          <TouchableOpacity onPress={handleImagePicker}>
+            <View style={styles.avatarContainer}>
+              {avatarSource ? (
+                <Image source={{uri: avatarSource.uri}} style={styles.avatar} />
+              ) : (
+                <Text style={styles.avatarPlaceholder}>Select Avatar</Text>
+              )}
+            </View>
+          </TouchableOpacity>
           <StyledButton
             label="Create Account"
             onPress={handleSubmit(onSubmit)}
@@ -102,6 +148,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
+  },
+  avatarContainer: {
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 75,
+  },
+  avatarPlaceholder: {
+    fontSize: 16,
+    color: 'gray',
   },
 });
 
