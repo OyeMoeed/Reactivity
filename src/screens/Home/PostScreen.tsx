@@ -83,7 +83,11 @@ const PostScreen = ({following, usersLoaded, users, feed}) => {
         {item.creation}
       </Text>
       <Interactions
-        Like={() => (isLiked ? onDislike(item) : onLike(item))}
+        Like={() =>
+          isLiked
+            ? onDislike(item.user.uid, item.id)
+            : onLike(item.user.uid, item.id)
+        }
         color={isLiked ? 'blue' : 'black'}
         Comment={() =>
           navigation.navigate('Comments', {postId: item.id, uid: item.user})

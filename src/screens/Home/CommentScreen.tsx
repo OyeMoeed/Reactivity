@@ -94,8 +94,15 @@ const CommentScreen = ({route, users, fetchUsersData}) => {
               borderColor: '#808080',
               marginBottom: 5,
             }}>
-            <UserInfotab>Name</UserInfotab>
-            <PostText>{item.text}</PostText>
+            {item.user !== undefined ? (
+              <UserInfotab source={{uri: item.avatarURL}}>
+                {item.name}
+              </UserInfotab>
+            ) : null}
+            <UserInfotab source={{uri: item.avatarURL}}>
+              {item.name}
+            </UserInfotab>
+            <Text>{item.text}</Text>
           </View>
         )}
       />

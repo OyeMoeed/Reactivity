@@ -7,6 +7,7 @@ buildscript {
         compileSdkVersion = 33
         targetSdkVersion = 33
             googlePlayServicesAuthVersion = "18.0.0" // <--- use this version or newer
+        cmakeVersion = "3.22.1" // Update this to a compatible CMake version
 
         // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
         ndkVersion = "23.1.7779620"

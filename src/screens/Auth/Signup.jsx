@@ -12,7 +12,6 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import AuthContainer from '../../container/AuthContainer';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
-import SocialButtons from '../../components/SocialButtons';
 import {AuthContext} from '../../firebase/AuthProvider';
 
 const Signup = ({navigation}) => {
@@ -64,6 +63,15 @@ const Signup = ({navigation}) => {
       style={styles.backgroundImage}
       resizeMode="cover">
       <AuthContainer>
+        <TouchableOpacity onPress={handleImagePicker}>
+          <View style={styles.avatarContainer}>
+            {avatarSource ? (
+              <Image source={{uri: avatarSource.uri}} style={styles.avatar} />
+            ) : (
+              <Text style={styles.avatarPlaceholder}>Select Avatar</Text>
+            )}
+          </View>
+        </TouchableOpacity>
         <View style={styles.formContainer}>
           <InputField
             label="Name"
@@ -96,15 +104,6 @@ const Signup = ({navigation}) => {
             placeholder="* * * * * * *"
             secureTextEntry
           />
-          <TouchableOpacity onPress={handleImagePicker}>
-            <View style={styles.avatarContainer}>
-              {avatarSource ? (
-                <Image source={{uri: avatarSource.uri}} style={styles.avatar} />
-              ) : (
-                <Text style={styles.avatarPlaceholder}>Select Avatar</Text>
-              )}
-            </View>
-          </TouchableOpacity>
           <StyledButton
             label="Create Account"
             onPress={handleSubmit(onSubmit)}
@@ -115,12 +114,6 @@ const Signup = ({navigation}) => {
             </Text>
           )}
         </View>
-
-        <View style={styles.orContainer}>
-          <Text style={styles.orText}>OR</Text>
-        </View>
-
-        <SocialButtons />
       </AuthContainer>
     </ImageBackground>
   );
@@ -154,8 +147,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   avatar: {
-    width: 50,
-    height: 50,
+    width: 100,
+    height: 100,
     borderRadius: 75,
   },
   avatarPlaceholder: {

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
-import SocialButtons from '../../components/SocialButtons';
 import Signup from './Signup';
 import ResetPassword from './ResetPassword';
 import {AuthContext} from '../../firebase/AuthProvider';
@@ -21,7 +20,7 @@ const Login = ({navigation}) => {
     formState: {errors},
     handleSubmit,
   } = useForm();
-  const {login, useGoogleLogin} = useContext(AuthContext);
+  const {login} = useContext(AuthContext);
 
   const onSubmit = data => {
     login(data.loginEmail, data.loginPassword);
@@ -56,8 +55,6 @@ const Login = ({navigation}) => {
             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
           </TouchableOpacity>
         </View>
-
-        <SocialButtons onPress={() => useGoogleLogin} />
 
         <View style={styles.text}>
           <Text style={styles.signupText}>Need An Account?</Text>
