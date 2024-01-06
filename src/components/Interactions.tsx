@@ -5,9 +5,15 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 const Interactions = ({Comment, color, Like}) => {
   return (
     <View style={style.row}>
-      <Icon name="heart" size={15} color={color} onPress={Like} />
+      <TouchableOpacity onPress={Like}>
+        <View>
+          <Icon name="heart" size={20} color={color} />
+        </View>
+      </TouchableOpacity>
       <TouchableOpacity onPress={Comment}>
-        <Ionicon name="chatbox-outline" size={15} />
+        <View>
+          <Ionicon name="chatbox-outline" size={20} />
+        </View>
       </TouchableOpacity>
     </View>
   );

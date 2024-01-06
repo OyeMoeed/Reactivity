@@ -1,21 +1,32 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, StyleSheet, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
 import ProfileContainer from '../../container/ProfileContainer';
 import {connect} from 'react-redux';
 import {firebase} from '@react-native-firebase/auth';
 import StyledButton from '../../components/StyledButton';
 import Icons from 'react-native-vector-icons/Ionicons';
-import Avatar from '../../assets/avatar.png';
 import FastImage from 'react-native-fast-image';
+import PostText from '../../components/PostText';
+import UserInfotab from '../../components/UserInfotab';
+import Card from '../../components/Card';
+import PostImage from '../../components/PostImage';
 
 const Profile = ({currentUser, posts, route, navigation, following}) => {
   const [userPosts, setUserPosts] = useState([]);
   const [user, setUser] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [postLoading, setPostLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      {
+      try {
         const userSnapshot = await firebase
           .firestore()
           .collection('Users')
@@ -44,7 +55,12 @@ const Profile = ({currentUser, posts, route, navigation, following}) => {
         });
 
         setUserPosts(fetchedPosts);
+        setPostLoading(false);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setPostLoading(false);
       }
+
       const updatedFollowing = following || [];
       const targetUid = route.params.uid;
 
@@ -58,6 +74,8 @@ const Profile = ({currentUser, posts, route, navigation, following}) => {
   }, [route.params.uid, currentUser?.uid, following]);
 
   const onFollow = async () => {
+    setIsLoading(true);
+
     try {
       const currentUser = firebase.auth().currentUser;
       if (currentUser) {
@@ -72,16 +90,21 @@ const Profile = ({currentUser, posts, route, navigation, following}) => {
           .doc(followedUid)
           .set({});
 
-        // setIsFollowing(true);
+        setIsFollowing(true);
+        setIsLoading(false);
       } else {
         console.warn('User not authenticated.');
+        setIsLoading(false);
       }
     } catch (error) {
       console.error('Error following user:', error);
+      setIsLoading(false);
     }
   };
 
   const onUnfollow = async () => {
+    setIsLoading(true);
+
     try {
       const currentUser = firebase.auth().currentUser;
 
@@ -97,23 +120,60 @@ const Profile = ({currentUser, posts, route, navigation, following}) => {
           .doc(followedUid)
           .delete();
 
-        // setIsFollowing(false);
+        setIsFollowing(false);
+        setIsLoading(false);
       } else {
         console.warn('User not authenticated.');
+        setIsLoading(false);
       }
     } catch (error) {
       console.error('Error unfollowing user:', error);
+      setIsLoading(false);
     }
   };
 
   const isOwnProfile = route.params.uid === currentUser?.uid;
+  const renderItem = ({item}) => (
+    <Card>
+      <UserInfotab source={{uri: user?.avatarURL}}>{user?.name}</UserInfotab>
+      {item.downloadUrl && <PostImage source={{uri: item.downloadUrl}} />}
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <PostText>{item.caption}</PostText>
+      </View>
+      <Text
+        style={{
+          fontSize: 8,
+          paddingBottom: 10,
+          color: '#808080',
+          marginLeft: 10,
+        }}>
+        {item.creation}
+      </Text>
+    </Card>
+  );
 
   const handleFollowButton = () => {
     if (!isOwnProfile) {
       if (isFollowing) {
-        return <StyledButton label="UNFOLLOW" onPress={onUnfollow} />;
+        return (
+          <View>
+            {isLoading ? (
+              <ActivityIndicator size="small" color="#0000ff" />
+            ) : (
+              <StyledButton label="UNFOLLOW" onPress={onUnfollow} />
+            )}
+          </View>
+        );
       } else {
-        return <StyledButton label="FOLLOW" onPress={onFollow} />;
+        return (
+          <View>
+            {isLoading ? (
+              <ActivityIndicator size="small" color="#0000ff" />
+            ) : (
+              <StyledButton label="FOLLOW" onPress={onFollow} />
+            )}
+          </View>
+        );
       }
     }
     return null;
@@ -126,23 +186,18 @@ const Profile = ({currentUser, posts, route, navigation, following}) => {
           source={{uri: user?.avatarURL}}
           style={styles.profileImage}
         />
-        <Text style={styles.username}>{user ? user.name : 'Loading...'}</Text>
+        <Text style={styles.username}>{user?.name || 'Loading...'}</Text>
       </View>
 
       <View>{handleFollowButton()}</View>
 
-      {userPosts && userPosts.length > 0 ? (
+      {postLoading ? (
+        <ActivityIndicator size="large" color="#2e64e5" />
+      ) : userPosts && userPosts.length > 0 ? (
         <FlatList
-          numColumns={3}
           data={userPosts}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => (
-            <FastImage
-              source={{uri: item.downloadUrl}}
-              style={styles.postImage}
-              resizeMode={FastImage.resizeMode.cover}
-            />
-          )}
+          renderItem={renderItem}
           contentContainerStyle={styles.postList}
         />
       ) : (

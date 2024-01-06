@@ -14,17 +14,41 @@ import Avatar from '../../assets/avatar.png';
 const PostScreen = ({following, usersLoaded, users, feed}) => {
   const navigation = useNavigation();
   const [posts, setPosts] = useState([]);
-  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
-    if (usersLoaded === following.length && following.length !== 0) {
-      console.log('Following Users', following.length);
+    const fetchLikes = async () => {
+      if (usersLoaded === following.length && following.length !== 0) {
+        console.log('Following Users', following.length);
 
-      feed.sort(function (x, y) {
-        return y.creation - x.creation;
-      });
-      setPosts(feed);
-    }
+        feed.sort(function (x, y) {
+          return y.creation - x.creation;
+        });
+
+        // Fetch and update like status for each post
+        const updatedPosts = await Promise.all(
+          feed.map(async post => {
+            const likeDoc = await firebase
+              .firestore()
+              .collection('Posts')
+              .doc(post.user.uid)
+              .collection('Uploads')
+              .doc(post.id)
+              .collection('Likes')
+              .doc(firebase.auth().currentUser?.uid)
+              .get();
+
+            return {
+              ...post,
+              isLiked: likeDoc.exists,
+            };
+          }),
+        );
+
+        setPosts(updatedPosts);
+      }
+    };
+
+    fetchLikes();
   }, [usersLoaded, feed]);
 
   const onLike = ({postId, userId}) => {
@@ -38,7 +62,14 @@ const PostScreen = ({following, usersLoaded, users, feed}) => {
       .doc(firebase.auth().currentUser?.uid)
       .set({});
 
-    // setIsLiked(true);
+    // Update the local state for the specific post
+    setPosts(prevPosts =>
+      prevPosts.map(post =>
+        post.id === postId && post.user.uid === userId
+          ? {...post, isLiked: true}
+          : post,
+      ),
+    );
   };
 
   const onDislike = ({postId, userId}) => {
@@ -52,25 +83,27 @@ const PostScreen = ({following, usersLoaded, users, feed}) => {
       .doc(firebase.auth().currentUser?.uid)
       .delete();
 
-    // setIsLiked(false);
+    // Update the local state for the specific post
+    setPosts(prevPosts =>
+      prevPosts.map(post =>
+        post.id === postId && post.user.uid === userId
+          ? {...post, isLiked: false}
+          : post,
+      ),
+    );
   };
 
   const renderItem = ({item}) => (
     <Card>
-      <UserInfotab source={{uri: item.user.avatarURL}}>
+      <UserInfotab
+        onPress={() =>
+          navigation.navigate('HomeProfile', {userId: item.user.uid})
+        }
+        source={{uri: item.user.avatarURL}}>
         {item.user.name}
       </UserInfotab>
-      <PostImage source={{uri: item.downloadUrl}} />
+      {item.downloadUrl && <PostImage source={{uri: item.downloadUrl}} />}
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Text
-          style={{
-            marginVertical: 15,
-            fontSize: 9,
-            fontWeight: '600',
-            marginLeft: 5,
-          }}>
-          {item.user.name}
-        </Text>
         <PostText>{item.caption}</PostText>
       </View>
       <Text
@@ -84,11 +117,11 @@ const PostScreen = ({following, usersLoaded, users, feed}) => {
       </Text>
       <Interactions
         Like={() =>
-          isLiked
-            ? onDislike(item.user.uid, item.id)
-            : onLike(item.user.uid, item.id)
+          item.isLiked
+            ? onDislike({userId: item.user.uid, postId: item.id})
+            : onLike({userId: item.user.uid, postId: item.id})
         }
-        color={isLiked ? 'blue' : 'black'}
+        color={item.isLiked ? 'blue' : 'black'}
         Comment={() =>
           navigation.navigate('Comments', {postId: item.id, uid: item.user})
         }

@@ -1,27 +1,57 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
-import ProfileContainer from '../../container/ProfileContainer';
-import Icons from 'react-native-vector-icons/Ionicons';
+import React, {useLayoutEffect} from 'react';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
 import FastImage from 'react-native-fast-image';
+import {createStackNavigator} from '@react-navigation/stack';
+import Icons from 'react-native-vector-icons/Ionicons';
+import ProfileContainer from '../../container/ProfileContainer';
+import Card from '../../components/Card';
+import UserInfotab from '../../components/UserInfotab';
+import PostImage from '../../components/PostImage';
+import PostText from '../../components/PostText';
+import Interactions from '../../components/Interactions';
+import Avatar from '../../assets/avatar.png';
 
-const UserProfile = ({currentUser, posts, following}) => {
+const UserProfile = ({currentUser, posts, following, navigation}) => {
+  const handleUploadPress = () => {
+    navigation.navigate('Upload');
+  };
+  const renderItem = ({item}) => (
+    <Card>
+      <UserInfotab source={{uri: currentUser.avatarURL}}>
+        {currentUser.name}
+      </UserInfotab>
+      {item.downloadUrl && <PostImage source={{uri: item.downloadUrl}} />}
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <PostText>{item.caption}</PostText>
+      </View>
+      <Text
+        style={{
+          fontSize: 8,
+          paddingBottom: 10,
+          color: '#808080',
+          marginLeft: 10,
+        }}>
+        {item.creation}
+      </Text>
+    </Card>
+  );
+
   return (
     <ProfileContainer>
       <View style={styles.userInfo}>
-        <TouchableOpacity style={styles.profileImageContainer}>
-          <FastImage
-            source={{uri: currentUser.avatarURL}}
-            // source={Avatar}
-            style={styles.profileImage}
-          />
+        <TouchableOpacity
+          style={styles.profileImageContainer}
+          onPress={handleUploadPress}>
+          {currentUser.avatarURL ? (
+            <FastImage
+              source={{uri: currentUser.avatarURL}}
+              style={styles.profileImage}
+            />
+          ) : (
+            // Render an alternative image when avatarURL is not available
+            <FastImage source={Avatar} style={styles.profileImage} />
+          )}
           <Text style={styles.editProfileText}>Edit Profile Picture</Text>
         </TouchableOpacity>
         <Text style={styles.username}>
@@ -41,16 +71,9 @@ const UserProfile = ({currentUser, posts, following}) => {
 
       {posts && posts.length > 0 ? (
         <FlatList
-          numColumns={3}
           data={posts}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => (
-            <FastImage
-              source={{uri: item.downloadUrl}}
-              style={styles.postImage}
-              resizeMode={FastImage.resizeMode.cover}
-            />
-          )}
+          renderItem={renderItem}
           contentContainerStyle={styles.postList}
         />
       ) : (
@@ -79,7 +102,7 @@ const styles = StyleSheet.create({
   },
   editProfileText: {
     fontSize: 10,
-    color: 'blue', // Adjust color as needed
+    color: 'blue',
   },
   username: {
     fontSize: 18,
@@ -101,13 +124,13 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 12,
-    color: 'gray', // Adjust color as needed
+    color: 'gray',
   },
   postList: {
     paddingHorizontal: 5,
   },
   postImage: {
-    width: '32%', // Adjust to your preference
+    width: '32%',
     aspectRatio: 1,
     margin: 2,
     borderRadius: 10,

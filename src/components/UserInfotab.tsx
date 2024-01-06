@@ -2,13 +2,14 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import React from 'react';
 import UserName from './UserName';
 import FastImage from 'react-native-fast-image';
-const UserInfotab = ({source, children}) => {
+import {TouchableOpacity} from 'react-native-gesture-handler';
+const UserInfotab = ({source, children, onPress}) => {
   return (
-    <View style={style.UserInfobar}>
+    <TouchableOpacity onPress={onPress} style={style.UserInfobar}>
       <FastImage source={source} style={style.avatarSize} />
 
       <UserName>{children}</UserName>
-    </View>
+    </TouchableOpacity>
   );
 };
 

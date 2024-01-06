@@ -11,6 +11,7 @@ import ProfileContainer from '../../container/ProfileContainer';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {firebase} from '@react-native-firebase/auth';
 import UserInfotab from '../../components/UserInfotab';
+import Profile from './Profile';
 
 const SearchUsers = ({navigation}) => {
   const [searchInput, setSearchInput] = useState('');

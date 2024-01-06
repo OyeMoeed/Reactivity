@@ -4,7 +4,7 @@ import React from 'react';
 const PostText = ({children}) => {
   return (
     <View style={{paddingVertical: 10, marginLeft: 5, }}>
-      <Text style={{fontSize: 9}}>{children}</Text>
+      <Text style={{fontSize: 15}}>{children}</Text>
     </View>
   );
 };

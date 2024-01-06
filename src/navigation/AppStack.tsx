@@ -15,6 +15,7 @@ import SearchUsers from '../screens/Home/SearchUsers';
 import UserProfile from '../screens/Home/UserProfile';
 import PostScreen from '../screens/Home/PostScreen';
 import CommentScreen from '../screens/Home/CommentScreen';
+import UploadProfilePictureScreen from '../screens/Home/UploadProfilePicture';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -70,6 +71,33 @@ const FeedStack = () => {
         options={{
           headerBackTitleVisible: false,
         }}
+      />
+      <Stack.Screen
+        name="HomeProfile"
+        component={Profile}
+        options={({route}) => ({
+          title: 'Profile',
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: '#fff',
+            shadowColor: '#fff',
+            elevation: 0,
+          },
+          headerBackTitleVisible: false,
+          uid: route.params?.uid,
+          headerRight: () => (
+            <View style={{marginRight: 10}}>
+              <Icon
+                name="chatbox-outline"
+                size={22}
+                color="#2e64e5"
+                onPress={() =>
+                  navigation.navigate('Chat', {uid: route.params?.uid})
+                }
+              />
+            </View>
+          ),
+        })}
       />
     </Stack.Navigator>
   );
@@ -132,6 +160,7 @@ const ProfileStack = ({route}) => {
           headerShown: false,
         }}
       />
+      <Stack.Screen name="Upload" component={UploadProfilePictureScreen} />
     </Stack.Navigator>
   );
 };

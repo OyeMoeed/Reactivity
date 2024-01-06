@@ -54,9 +54,10 @@ const Post = ({navigation}) => {
     };
     launchCamera(options, handleImageSelection);
   };
-
   const uploadImageToFirebase = async () => {
     try {
+      let downloadURL = null;
+
       if (image) {
         const imageName = generateUniqueFileName();
         const imageRef = storage()
@@ -80,12 +81,10 @@ const Post = ({navigation}) => {
         await uploadTask;
 
         // Get the download URL from the snapshot
-        const downloadURL = await imageRef.getDownloadURL();
-
-        savePostData(downloadURL); // Pass the downloadURL to savePostData function
-      } else {
-        alert('No image selected.');
+        downloadURL = await imageRef.getDownloadURL();
       }
+
+      savePostData(downloadURL); // Pass the downloadURL to savePostData function
     } catch (error) {
       console.error('Error uploading image to Firebase:', error);
     } finally {
