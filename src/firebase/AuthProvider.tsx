@@ -40,32 +40,36 @@ export const AuthProvider = ({children}) => {
         password,
       );
 
-      if (!avatarSource || !avatarSource.uri) {
-        console.error('Avatar source is undefined or does not have a URI.');
-        alert('Sign Up Unsuccessful');
-        return;
+      if (avatarSource && avatarSource.uri) {
+        const avatarReference = storage().ref(
+          `avatars/${createdUser.uid}/avatar.jpg`,
+        );
+        await avatarReference.putFile(avatarSource.uri);
+        const avatarDownloadURL = await avatarReference.getDownloadURL();
+
+        await createdUser.updateProfile({
+          displayName: name,
+          photoURL: avatarDownloadURL,
+        });
+
+        await firestore().collection('Users').doc(createdUser.uid).set({
+          name,
+          email,
+          avatarURL: avatarDownloadURL,
+        });
+      } else {
+        // If no avatar is provided, update only the display name
+        await createdUser.updateProfile({
+          displayName: name,
+        });
+
+        await firestore().collection('Users').doc(createdUser.uid).set({
+          name,
+          email,
+        });
       }
 
-      const avatarReference = storage().ref(
-        `avatars/${createdUser.uid}/avatar.jpg`,
-      );
-
-      await avatarReference.putFile(avatarSource.uri);
-
-      const avatarDownloadURL = await avatarReference.getDownloadURL();
-
-      await createdUser.updateProfile({
-        displayName: name,
-        photoURL: avatarDownloadURL,
-      });
-
-      await firestore().collection('Users').doc(createdUser.uid).set({
-        name,
-        email,
-        avatarURL: avatarDownloadURL,
-      });
-
-      console.log('User signed up successfully with avatar:', createdUser);
+      console.log('User signed up successfully:', createdUser);
     } catch (error) {
       console.error('Registration Error:', error.message);
       alert('Sign Up Unsuccessful');

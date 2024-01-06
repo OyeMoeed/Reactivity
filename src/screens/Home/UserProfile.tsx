@@ -9,7 +9,6 @@ import Card from '../../components/Card';
 import UserInfotab from '../../components/UserInfotab';
 import PostImage from '../../components/PostImage';
 import PostText from '../../components/PostText';
-import Interactions from '../../components/Interactions';
 import Avatar from '../../assets/avatar.png';
 
 const UserProfile = ({currentUser, posts, following, navigation}) => {

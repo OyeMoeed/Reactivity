@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, FlatList, Text, View} from 'react-native';
+import {
+  StyleSheet,
+  FlatList,
+  Text,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import ProfileContainer from '../../container/ProfileContainer';
 import {connect} from 'react-redux';
 import Card from '../../components/Card';
@@ -9,14 +15,16 @@ import PostImage from '../../components/PostImage';
 import Interactions from '../../components/Interactions';
 import {useNavigation} from '@react-navigation/native';
 import {firebase} from '@react-native-firebase/auth';
-import Avatar from '../../assets/avatar.png';
 
-const PostScreen = ({following, usersLoaded, users, feed}) => {
+const PostScreen = ({following, usersLoaded, feed}) => {
   const navigation = useNavigation();
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchLikes = async () => {
+      setLoading(true);
+
       if (usersLoaded === following.length && following.length !== 0) {
         console.log('Following Users', following.length);
 
@@ -45,6 +53,9 @@ const PostScreen = ({following, usersLoaded, users, feed}) => {
         );
 
         setPosts(updatedPosts);
+        setLoading(false);
+      } else {
+        setLoading(false);
       }
     };
 
@@ -62,7 +73,6 @@ const PostScreen = ({following, usersLoaded, users, feed}) => {
       .doc(firebase.auth().currentUser?.uid)
       .set({});
 
-    // Update the local state for the specific post
     setPosts(prevPosts =>
       prevPosts.map(post =>
         post.id === postId && post.user.uid === userId
@@ -129,6 +139,24 @@ const PostScreen = ({following, usersLoaded, users, feed}) => {
     </Card>
   );
 
+  if (loading) {
+    return (
+      <ProfileContainer>
+        <ActivityIndicator size="large" color="#2e64e5" />
+      </ProfileContainer>
+    );
+  }
+
+  if (posts.length === 0) {
+    return (
+      <ProfileContainer>
+        <View style={styles.noPostsContainer}>
+          <Text style={styles.noPostsText}>Nothing to display.</Text>
+        </View>
+      </ProfileContainer>
+    );
+  }
+
   return (
     <ProfileContainer>
       <FlatList
@@ -140,6 +168,18 @@ const PostScreen = ({following, usersLoaded, users, feed}) => {
     </ProfileContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  noPostsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noPostsText: {
+    fontSize: 16,
+    color: '#808080',
+  },
+});
 
 const mapStateToProps = store => ({
   following: store.userState.following,

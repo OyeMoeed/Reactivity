@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TextInput, FlatList} from 'react-native';
-import Card from '../../components/Card';
 import {firebase} from '@react-native-firebase/firestore';
 import StyledButton from '../../components/StyledButton';
 import {fetchUsersData} from '../../redux/actions';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import PostText from '../../components/PostText';
 import UserInfotab from '../../components/UserInfotab';
 
 const CommentScreen = ({route, users, fetchUsersData}) => {

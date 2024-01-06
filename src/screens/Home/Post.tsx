@@ -58,6 +58,12 @@ const Post = ({navigation}) => {
     try {
       let downloadURL = null;
 
+      if (!caption) {
+        // Show an alert or take any appropriate action
+        Alert.alert('Error', 'Please enter a caption for your post.');
+        return;
+      }
+
       if (image) {
         const imageName = generateUniqueFileName();
         const imageRef = storage()

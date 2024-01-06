@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -14,8 +14,10 @@ import storage from '@react-native-firebase/storage';
 import {useNavigation} from '@react-navigation/native';
 
 const UploadProfilePictureScreen = () => {
-  const navigaton = useNavigation();
+  const navigation = useNavigation();
   const [profilePicture, setProfilePicture] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
   const pickImage = () => {
     launchImageLibrary({mediaType: 'photo'}, response => {
       if (response.didCancel) {
@@ -29,25 +31,30 @@ const UploadProfilePictureScreen = () => {
     });
   };
 
-  const uploadProfilePicture = async () => {
-    try {
-      const userId = firebase.auth().currentUser?.uid;
+  const updateProfilePicture = async () => {
+    const userId = firebase.auth().currentUser?.uid;
 
-      // Get the current user's information
+    try {
       const currentUser = firebase.auth().currentUser;
 
       if (profilePicture) {
-        // Delete the old profile picture if it exists
-        if (currentUser?.avatarURL) {
-          const oldImageRef = storage().refFromURL(currentUser.avatarURL);
-          await oldImageRef.delete();
-        }
+        setUploading(true); // Set uploading to true when the process starts
 
-        // Upload the new profile picture
         const imageName = 'profile_picture.jpg';
         const imageRef = storage().ref().child(`Users/${userId}/${imageName}`);
 
-        // Add the missing await keyword here
+        // Delete the old profile picture if it exists
+        const oldImageRef = storage()
+          .ref()
+          .child(`Users/${userId}/avatarURL/avatar.jpg`);
+        await oldImageRef.delete().catch(error => {
+          // Handle deletion error if the file doesn't exist
+          if (error.code !== 'storage/object-not-found') {
+            console.error('Error deleting old profile picture:', error);
+          }
+        });
+
+        // Upload the new profile picture
         const response = await fetch(profilePicture);
         const blob = await response.blob();
         await imageRef.put(blob);
@@ -59,10 +66,15 @@ const UploadProfilePictureScreen = () => {
         await currentUser?.updateProfile({
           photoURL: downloadURL,
         });
-        <ActivityIndicator size={30} />;
+
+        // Update the avatarURL field in Firestore
+        await firebase.firestore().collection('Users').doc(userId).update({
+          avatarURL: downloadURL,
+        });
+
         // Display success message or navigate to another screen
         Alert.alert('Success', 'Profile picture updated successfully');
-        navigaton.navigate('ProfileScreen');
+        navigation.navigate('ProfileScreen');
       } else {
         // If no new profile picture is selected
         Alert.alert('Error', 'No profile picture selected');
@@ -70,8 +82,15 @@ const UploadProfilePictureScreen = () => {
     } catch (error) {
       console.error('Error updating profile picture:', error);
       Alert.alert('Error', 'Failed to update profile picture');
+    } finally {
+      setUploading(false); // Set uploading to false when the process finishes
     }
   };
+
+  useEffect(() => {
+    // Clear the profile picture state when navigating back to this screen
+    return () => setProfilePicture(null);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -86,9 +105,15 @@ const UploadProfilePictureScreen = () => {
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={uploadProfilePicture}
-        style={styles.uploadButton}>
-        <Text style={styles.uploadButtonText}>Upload Profile Picture</Text>
+        onPress={updateProfilePicture}
+        style={styles.uploadButton}
+        disabled={uploading} // Disable the button while uploading
+      >
+        {uploading ? (
+          <ActivityIndicator color="white" />
+        ) : (
+          <Text style={styles.uploadButtonText}>Upload Profile Picture</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -118,6 +143,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2e64e5',
     padding: 10,
     borderRadius: 5,
+    alignItems: 'center',
   },
   uploadButtonText: {
     color: 'white',
