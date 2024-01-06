@@ -106,9 +106,7 @@ const PostScreen = ({following, usersLoaded, feed}) => {
   const renderItem = ({item}) => (
     <Card>
       <UserInfotab
-        onPress={() =>
-          navigation.navigate('HomeProfile', {userId: item.user.uid})
-        }
+        onPress={() => navigation.navigate('HomeProfile', {uid: item.user.uid})}
         source={{uri: item.user.avatarURL}}>
         {item.user.name}
       </UserInfotab>
