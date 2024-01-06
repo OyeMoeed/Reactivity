@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -168,6 +168,21 @@ const ProfileStack = ({route}) => {
 const AppStack = () => {
   const currentUserUID = firebase.auth().currentUser?.uid;
   const {signout} = useContext(AuthContext);
+  const [signoutLoading, setSignoutLoading] = useState(false);
+
+  const handleSignout = async () => {
+    try {
+      setSignoutLoading(true);
+      // Your signout logic here
+      await signout();
+    } catch (error) {
+      console.error('Error during signout:', error);
+    } finally {
+      setTimeout(() => {
+        setSignoutLoading(false);
+      }, 2000); // Show activity indicator for 1 second
+    }
+  };
 
   return (
     <Tab.Navigator>
@@ -219,12 +234,16 @@ const AppStack = () => {
           ),
           headerRight: () => (
             <View style={{marginRight: 10}}>
-              <Icon
-                name="log-out-outline"
-                size={22}
-                color="#2e64e5"
-                onPress={signout}
-              />
+              {signoutLoading ? (
+                <ActivityIndicator size="small" color="#2e64e5" />
+              ) : (
+                <Icon
+                  name="log-out-outline"
+                  size={22}
+                  color="#2e64e5"
+                  onPress={handleSignout}
+                />
+              )}
             </View>
           ),
         }}

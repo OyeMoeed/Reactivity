@@ -6,9 +6,13 @@ import {
   ImageBackground,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import {useForm} from 'react-hook-form';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {
+  launchImageLibrary,
+  ImagePickerResponse,
+} from 'react-native-image-picker';
 import AuthContainer from '../../container/AuthContainer';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
@@ -24,18 +28,25 @@ const Signup = ({navigation}) => {
   const {signup} = useContext(AuthContext);
 
   const [avatarSource, setAvatarSource] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async data => {
     const {name, email, password} = data;
 
     try {
+      setLoading(true);
       if (avatarSource && avatarSource.uri) {
         await signup(name, email, password, avatarSource);
       } else {
         throw new Error('Avatar source is undefined or does not have a URI.');
       }
+      // Simulate a delay of 5 seconds
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
     } catch (error) {
       console.error('Error during sign up:', error.message);
+      setLoading(false);
       alert('Sign Up Unsuccessful');
     }
   };
@@ -108,6 +119,13 @@ const Signup = ({navigation}) => {
             label="Create Account"
             onPress={handleSubmit(onSubmit)}
           />
+
+          {loading && (
+            <View style={styles.activityIndicator}>
+              <ActivityIndicator size="large" color="#ffffff" />
+            </View>
+          )}
+
           {Object.keys(errors).length > 0 && (
             <Text style={styles.errorText}>
               Please fill in all required fields.
@@ -126,13 +144,6 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     marginTop: 10,
-  },
-  orContainer: {
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  orText: {
-    color: 'gray',
   },
   backgroundImage: {
     flex: 1,
@@ -154,6 +165,16 @@ const styles = StyleSheet.create({
   avatarPlaceholder: {
     fontSize: 16,
     color: 'gray',
+  },
+  activityIndicator: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 });
 

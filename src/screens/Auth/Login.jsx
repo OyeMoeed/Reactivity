@@ -1,10 +1,11 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   ImageBackground,
+  ActivityIndicator,
 } from 'react-native';
 import InputField from '../../components/InputField';
 import StyledButton from '../../components/StyledButton';
@@ -21,9 +22,21 @@ const Login = ({navigation}) => {
     handleSubmit,
   } = useForm();
   const {login} = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit = data => {
-    login(data.loginEmail, data.loginPassword);
+  const onSubmit = async data => {
+    try {
+      setLoading(true);
+      await login(data.loginEmail, data.loginPassword);
+      // Simulate a delay of 5 seconds
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    } catch (error) {
+      // Handle login error
+      console.error('Login failed:', error.message);
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,6 +63,12 @@ const Login = ({navigation}) => {
         />
         <StyledButton label="Sign In" onPress={handleSubmit(onSubmit)} />
 
+        {loading && (
+          <View style={styles.activityIndicator}>
+            <ActivityIndicator size="large" color="#ffffff" />
+          </View>
+        )}
+
         <View style={styles.text}>
           <TouchableOpacity onPress={() => navigation.navigate(ResetPassword)}>
             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
@@ -75,6 +94,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
+  },
+  activityIndicator: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   text: {
     flexDirection: 'row',
