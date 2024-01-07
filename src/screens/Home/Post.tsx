@@ -58,8 +58,6 @@ const Post = ({navigation}) => {
     try {
       let downloadURL = null;
 
-      
-
       if (image) {
         const imageName = generateUniqueFileName();
         const imageRef = storage()
@@ -140,7 +138,14 @@ const Post = ({navigation}) => {
           style={styles.text}
           onChangeText={text => setCaption(text)}
         />
-        <StyledButton label="POST" onPress={uploadImageToFirebase} />
+        {uploading ? (
+          <View style={styles.uploadingContainer}>
+            <ActivityIndicator size="large" color="#2e64e5" />
+            <Text style={styles.progressText}>{uploadProgress}%</Text>
+          </View>
+        ) : (
+          <StyledButton label="POST" onPress={uploadImageToFirebase} />
+        )}
       </View>
 
       <ActionButton buttonColor="#2e64e5">
@@ -157,15 +162,6 @@ const Post = ({navigation}) => {
           <Icon name="image" style={styles.actionButtonIcon} />
         </ActionButton.Item>
       </ActionButton>
-
-      <Modal visible={uploading} transparent={true} animationType="fade">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <ActivityIndicator size="large" color="#2e64e5" />
-            <Text style={styles.progressText}>{uploadProgress}%</Text>
-          </View>
-        </View>
-      </Modal>
     </HomeContainer>
   );
 };
@@ -212,6 +208,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
     color: '#2e64e5',
+  },
+  uploadingContainer: {
+    alignItems: 'center',
   },
 });
 

@@ -29,7 +29,8 @@ target 'Reactivity' do
 
   # Include RNFBFirestore pod
   pod 'RNFBFirestore', :path => '../node_modules/@react-native-firebase/firestore'
-  
+  pod 'BoringSSL-GRPC', '0.0.24'
+
   # Flags change depending on the env values.
   flags = get_default_flags()
 
